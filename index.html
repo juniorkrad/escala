@@ -373,6 +373,20 @@
       for (let i = 0; i < globalDayCounter; i++) {
         const hours = empData[emp].days[i] || 0;
         
+        // Verifica que dia da semana é o dia 'i' (O dia 0, 1 de Março, é Domingo = 0)
+        const actualWeekDay = (0 + i) % 7; 
+        
+        // Lógica de fechamento de semana: FECHA ANTES DE SOMAR O DOMINGO NOVO
+        if (actualWeekDay === 0 && i !== 0) {
+          // Chegou no domingo (e não é o primeiro dia do calendário).
+          // Salva a semana ANTERIOR.
+          const alertClass = weeklyHours > 44 ? 'stat-alert' : '';
+          htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekCount}:</span> <span>${weeklyHours}h</span></div>`;
+          
+          weeklyHours = 0; // Reseta para a nova semana que começa AGORA (neste Domingo)
+          weekCount++;
+        }
+
         // Lógica de dias consecutivos
         if (hours > 0) {
           consecutiveDays++;
@@ -381,20 +395,13 @@
           consecutiveDays = 0; // Zerou, teve folga
         }
 
-        // Lógica de horas na semana
+        // Lógica de horas na semana: AGORA SOMA O DOMINGO NA SEMANA CORRETA
         weeklyHours += hours;
-        
-        // Verifica que dia da semana é o dia 'i' (O dia 0, 1 de Março, é Domingo = 0)
-        // Precisamos fechar a conta da semana todo Domingo (dia 0).
-        const actualWeekDay = (0 + i) % 7; 
-        
-        if (actualWeekDay === 0 && i !== 0 || i === globalDayCounter - 1) {
-          // Domingo alcançado ou fim do calendário, salva a semana
-          const alertClass = weeklyHours > 44 ? 'stat-alert' : '';
-          htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekCount}:</span> <span>${weeklyHours}h</span></div>`;
-          
-          weeklyHours = 0; // Reseta para a próxima semana
-          weekCount++;
+
+        // Se for o último dia do calendário, força o fechamento da última semana parcial
+        if (i === globalDayCounter - 1) {
+             const alertClass = weeklyHours > 44 ? 'stat-alert' : '';
+             htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekCount}:</span> <span>${weeklyHours}h</span></div>`;
         }
       }
 
