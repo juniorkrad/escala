@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anotações NOC - Propostas de Escala</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --md-sys-color-background: #1C1B1F;
+    --md-sys-color-on-background: #E6E1E5;
+    --md-sys-color-surface: #2B2930;
+    --md-sys-color-on-surface: #E6E1E5;
+    --md-sys-color-primary: #D0BCFF;
+    --md-sys-color-on-primary: #381E72;
+    --md-sys-color-outline: #49454F;
+    --md-sys-color-secondary-container: #4A4458;
+    --md-sys-color-on-secondary-container: #E8DEF8;
+  }
+
+  body {
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: 'Roboto Mono', monospace;
+    padding: 24px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh; /* Centraliza verticalmente na tela */
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  h1 {
+    color: var(--md-sys-color-primary);
+    font-size: 2rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  p.subtitle {
+    font-size: 0.9rem;
+    color: var(--md-sys-color-on-background);
+    opacity: 0.7;
+    margin-top: 0;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 450px; /* Levemente maior para acomodar os novos textos */
+  }
+
+  .nav-card {
+    background-color: var(--md-sys-color-surface);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: 16px;
+    padding: 24px;
+    text-decoration: none;
+    color: var(--md-sys-color-on-surface);
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .nav-card:hover {
+    background-color: var(--md-sys-color-primary);
+    border-color: var(--md-sys-color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  .card-title {
+    color: var(--md-sys-color-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav-card:hover .card-title,
+  .nav-card:hover .card-desc {
+    color: var(--md-sys-color-on-primary);
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    color: var(--md-sys-color-on-background);
+    transition: all 0.2s ease-in-out;
+  }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Propostas de Escala NOC</h1>
+    <p class="subtitle">Controle de Revezamento e Jornada (44h)</p>
+  </div>
+
+  <div class="cards-container">
+    <a href="escala-meia-folga.html" class="nav-card">
+      <div class="card-title">
+        <span>📅</span> Opção 1: Plantão Sáb/Dom
+      </div>
+      <div class="card-desc">Meia folga pós-plantão (Déficit de 4h pré-plantão)</div>
+    </a>
+
+    <a href="escala-meia-folga2.html" class="nav-card">
+      <div class="card-title">
+        <span>🚀</span> Opção 2: Sábado Dividido
+      </div>
+      <div class="card-desc">Plantão apenas domingo e turnos no sábado (Blindado)</div>
+    </a>
+  </div>
+
+</body>
+</html>

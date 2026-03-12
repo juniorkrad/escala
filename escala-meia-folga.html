@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário NOC - Visão Completa (Opção 2: Meia Folga)</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --md-sys-color-background: #1C1B1F;
+    --md-sys-color-on-background: #E6E1E5;
+    --md-sys-color-surface: #2B2930;
+    --md-sys-color-primary: #D0BCFF;
+    --md-sys-color-outline: #49454F;
+    --md-sys-color-secondary: #CCC2DC;
+    --md-sys-color-error: #F2B8B5;
+    --md-sys-color-success: #C4EED0;
+    --md-sys-color-tertiary: #EFB8C8;
+    --md-sys-color-surface-variant: #49454F;
+  }
+
+  body {
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: 'Roboto Mono', monospace;
+    padding: 24px;
+    margin: 0;
+  }
+
+  h2 {
+    color: var(--md-sys-color-primary);
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    margin-top: 16px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Layout da Barra de Controles (Botão + Legenda) */
+  .controls-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--md-sys-color-surface);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--md-sys-color-outline);
+    margin-bottom: 24px;
+    flex-wrap: wrap; /* Garante que não quebre no celular */
+    gap: 16px;
+  }
+
+  .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--md-sys-color-on-background);
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--md-sys-color-outline);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .back-button:hover {
+    background-color: rgba(208, 188, 255, 0.08);
+    border-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-primary);
+  }
+
+  .legend {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: var(--md-sys-color-secondary);
+    flex-wrap: wrap;
+    flex: 1; /* Faz a legenda ocupar o resto do espaço */
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    background-color: var(--md-sys-color-surface);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--md-sys-color-outline);
+  }
+
+  .day-header {
+    color: var(--md-sys-color-primary);
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+    margin-bottom: 4px;
+    font-size: 0.85rem;
+  }
+
+  .day-cell {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    padding: 6px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .date-number {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--md-sys-color-on-background);
+    margin-bottom: 4px;
+    align-self: flex-end;
+  }
+
+  .event {
+    font-size: 0.65rem;
+    padding: 3px 4px;
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Cores das Tags */
+  .e-normal { background-color: transparent; color: var(--md-sys-color-secondary); border: 1px solid rgba(204, 194, 220, 0.2); }
+  .e-sabado { background-color: rgba(204, 194, 220, 0.1); color: var(--md-sys-color-on-background); border: 1px solid rgba(204, 194, 220, 0.3); }
+  .e-plantao { background-color: rgba(208, 188, 255, 0.2); color: var(--md-sys-color-primary); border: 1px solid rgba(208, 188, 255, 0.4); }
+  .e-folga { background-color: rgba(196, 238, 208, 0.15); color: var(--md-sys-color-success); border: 1px solid rgba(196, 238, 208, 0.4); }
+  .e-pos { background-color: rgba(239, 184, 200, 0.15); color: var(--md-sys-color-tertiary); border: 1px dashed rgba(239, 184, 200, 0.5); }
+  .e-fds { background-color: rgba(73, 69, 79, 0.3); color: #A8A0B1; border: 1px solid rgba(73, 69, 79, 0.5); }
+  .e-ferias { background-color: rgba(242, 184, 181, 0.15); color: var(--md-sys-color-error); border: 1px solid rgba(242, 184, 181, 0.4); }
+  
+  .empty-cell { background-color: transparent; border: none; }
+  .weekend { background-color: rgba(255, 255, 255, 0.04); }
+</style>
+</head>
+<body>
+
+<div class="controls-bar">
+  <a href="index.html" class="back-button">⬅ Home</a>
+  
+  <div class="legend">
+    <span class="event e-normal">🏢 Normal (09-18h)</span>
+    <span class="event e-sabado">⏱️ Sábado 4h</span>
+    <span class="event e-plantao">🚨 Plantão (09-18h)</span>
+    <span class="event e-folga">🌗 Folga 4h (Meio Período)</span>
+    <span class="event e-pos">🔋 Pós-Plantão (Máx 5 Dias)</span>
+    <span class="event e-fds">🛌 Fim de Semana Livre</span>
+    <span class="event e-ferias">🏖️ Férias</span>
+  </div>
+</div>
+
+<h2>Março 2026</h2>
+<div class="calendar-grid">
+  <div class="day-header">DOM</div><div class="day-header">SEG</div><div class="day-header">TER</div><div class="day-header">QUA</div><div class="day-header">QUI</div><div class="day-header">SEX</div><div class="day-header">SÁB</div>
+
+  <div class="day-cell weekend"><div class="date-number">1</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-plantao">🚨 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">2</div>
+    <div class="event e-folga">🌗 Gabi 4h</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D2)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">3</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D3)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">4</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D4)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">5</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D5)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">6</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-folga">🌗 Sunamita 4h</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">7</div>
+    <div class="event e-plantao">🚨 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-sabado">⏱️ Sabrina 4h</div><div class="event e-sabado">⏱️ Stael 4h</div><div class="event e-fds">🛌 Sunamita</div> </div>
+
+  <div class="day-cell weekend"><div class="date-number">8</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-plantao">🚨 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-fds">🛌 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">9</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D2)</div><div class="event e-folga">🌗 Sabrina 4h</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">10</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D3)</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">11</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D4)</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">12</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D5)</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">13</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-folga">🌗 Helio 4h</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">14</div>
+    <div class="event e-sabado">⏱️ Gabi 4h</div><div class="event e-fds">🛌 Helio</div> <div class="event e-plantao">🚨 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+
+  <div class="day-cell weekend"><div class="date-number">15</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-plantao">🚨 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">16</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-folga">🌗 Helio 4h</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D2)</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">17</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D3)</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">18</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D4)</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">19</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D5)</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">20</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-folga">🌗 Stael 4h</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">21</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-plantao">🚨 Helio</div><div class="event e-sabado">⏱️ Sabrina 4h</div><div class="event e-fds">🛌 Stael</div> <div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+
+  <div class="day-cell weekend"><div class="date-number">22</div>
+    <div class="event e-plantao">🚨 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">23</div>
+    <div class="event e-pos">🔋 Gabi (D2)</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-folga">🌗 Stael 4h</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">24</div>
+    <div class="event e-pos">🔋 Gabi (D3)</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">25</div>
+    <div class="event e-pos">🔋 Gabi (D4)</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">26</div>
+    <div class="event e-pos">🔋 Gabi (D5)</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">27</div>
+    <div class="event e-folga">🌗 Gabi 4h</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">28</div>
+    <div class="event e-fds">🛌 Gabi</div> <div class="event e-sabado">⏱️ Helio 4h</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-plantao">🚨 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+
+  <div class="day-cell weekend"><div class="date-number">29</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-plantao">🚨 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">30</div>
+    <div class="event e-folga">🌗 Gabi 4h</div><div class="event e-normal">🏢 Helio</div><div class="event e-pos">🔋 Sabrina (D2)</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">31</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-pos">🔋 Sabrina (D3)</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell empty-cell"></div><div class="day-cell empty-cell"></div><div class="day-cell empty-cell"></div><div class="day-cell empty-cell"></div>
+</div>
+
+<h2>Abril 2026</h2>
+<div class="calendar-grid">
+  <div class="day-header">DOM</div><div class="day-header">SEG</div><div class="day-header">TER</div><div class="day-header">QUA</div><div class="day-header">QUI</div><div class="day-header">SEX</div><div class="day-header">SÁB</div>
+
+  <div class="day-cell empty-cell"></div><div class="day-cell empty-cell"></div><div class="day-cell empty-cell"></div>
+  <div class="day-cell"><div class="date-number">1</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-pos">🔋 Sabrina (D4)</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">2</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-pos">🔋 Sabrina (D5)</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">3</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-folga">🌗 Sabrina 4h</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">4</div>
+    <div class="event e-plantao">🚨 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-fds">🛌 Sabrina</div> <div class="event e-sabado">⏱️ Stael 4h</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+
+  <div class="day-cell weekend"><div class="date-number">5</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-plantao">🚨 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">6</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D2)</div><div class="event e-folga">🌗 Sabrina 4h</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">7</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D3)</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-ferias">🏖️ Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">8</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D4)</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">9</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D5)</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">10</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-folga">🌗 Helio 4h</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">11</div>
+    <div class="event e-sabado">⏱️ Gabi 4h</div><div class="event e-fds">🛌 Helio</div> <div class="event e-plantao">🚨 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-sabado">⏱️ Sunamita 4h</div>
+  </div>
+
+  <div class="day-cell weekend"><div class="date-number">12</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-plantao">🚨 Stael</div><div class="event e-fds">🛌 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">13</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D2)</div><div class="event e-folga">🌗 Sunamita 4h</div>
+  </div>
+  <div class="day-cell"><div class="date-number">14</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D3)</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">15</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D4)</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">16</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-pos">🔋 Stael (D5)</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">17</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-folga">🌗 Stael 4h</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">18</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-sabado">⏱️ Helio 4h</div><div class="event e-sabado">⏱️ Sabrina 4h</div><div class="event e-fds">🛌 Stael</div> <div class="event e-plantao">🚨 Sunamita</div>
+  </div>
+
+  <div class="day-cell weekend"><div class="date-number">19</div>
+    <div class="event e-plantao">🚨 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-fds">🛌 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">20</div>
+    <div class="event e-pos">🔋 Gabi (D2)</div><div class="event e-folga">🌗 Helio 4h</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D2)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">21</div>
+    <div class="event e-pos">🔋 Gabi (D3)</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D3)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">22</div>
+    <div class="event e-pos">🔋 Gabi (D4)</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D4)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">23</div>
+    <div class="event e-pos">🔋 Gabi (D5)</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-pos">🔋 Sunamita (D5)</div>
+  </div>
+  <div class="day-cell"><div class="date-number">24</div>
+    <div class="event e-folga">🌗 Gabi 4h</div><div class="event e-normal">🏢 Helio</div><div class="event e-normal">🏢 Sabrina</div><div class="event e-normal">🏢 Stael</div><div class="event e-folga">🌗 Sunamita 4h</div>
+  </div>
+  <div class="day-cell weekend"><div class="date-number">25</div>
+    <div class="event e-fds">🛌 Gabi</div> <div class="event e-plantao">🚨 Helio</div><div class="event e-fds">🛌 Sabrina</div><div class="event e-sabado">⏱️ Stael 4h</div><div class="event e-fds">🛌 Sunamita</div> </div>
+
+  <div class="day-cell weekend"><div class="date-number">26</div>
+    <div class="event e-fds">🛌 Gabi</div><div class="event e-fds">🛌 Helio</div><div class="event e-plantao">🚨 Sabrina</div><div class="event e-fds">🛌 Stael</div><div class="event e-fds">🛌 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">27</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D2)</div><div class="event e-pos">🔋 Sabrina (D2)</div><div class="event e-folga">🌗 Stael 4h</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">28</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D3)</div><div class="event e-pos">🔋 Sabrina (D3)</div><div class="event e-normal">🏢 Stael</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">29</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D4)</div><div class="event e-pos">🔋 Sabrina (D4)</div><div class="event e-normal">🏢 Stael</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell"><div class="date-number">30</div>
+    <div class="event e-normal">🏢 Gabi</div><div class="event e-pos">🔋 Helio (D5)</div><div class="event e-pos">🔋 Sabrina (D5)</div><div class="event e-normal">🏢 Stael</div><div class="event e-normal">🏢 Sunamita</div>
+  </div>
+  <div class="day-cell empty-cell"></div><div class="day-cell empty-cell"></div>
+</div>
+
+</body>
+</html>
