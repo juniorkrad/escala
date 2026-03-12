@@ -116,7 +116,7 @@
 
   /* Estilo dos Selects reduzidos */
   .shift-select {
-    width: 60%; /* Reduzido para dar espaço ao nome */
+    width: 60%;
     font-family: 'Roboto Mono', monospace;
     font-size: 0.65rem;
     font-weight: 500;
@@ -133,9 +133,7 @@
   .s-normal { background-color: transparent; color: var(--md-sys-color-secondary); border: 1px solid rgba(204, 194, 220, 0.3); }
   .s-sabado { background-color: rgba(204, 194, 220, 0.1); color: var(--md-sys-color-on-background); border: 1px solid rgba(204, 194, 220, 0.4); }
   .s-plantao { background-color: rgba(208, 188, 255, 0.2); color: var(--md-sys-color-primary); border: 1px solid rgba(208, 188, 255, 0.5); }
-  .s-folga { background-color: rgba(196, 238, 208, 0.15); color: var(--md-sys-color-success); border: 1px solid rgba(196, 238, 208, 0.5); }
   .s-fds { background-color: rgba(73, 69, 79, 0.3); color: #A8A0B1; border: 1px solid rgba(73, 69, 79, 0.5); }
-  .s-ferias { background-color: rgba(242, 184, 181, 0.15); color: var(--md-sys-color-error); border: 1px solid rgba(242, 184, 181, 0.5); }
 
   /* Área de Auditoria (Dashboard Lateral) */
   .audit-area {
@@ -149,13 +147,13 @@
 
   .audit-header {
     padding: 16px;
-    background-color: var(--md-sys-color-surface); /* ALTERAÇÃO AQUI: Cor sólida para bloquear o texto por baixo */
+    background-color: var(--md-sys-color-surface); 
     border-bottom: 1px solid var(--md-sys-color-outline);
     position: sticky;
     top: 0;
     font-weight: 700;
     color: var(--md-sys-color-primary);
-    z-index: 5; /* Garante que fique acima das linhas da tabela rolando */
+    z-index: 5; 
   }
 
   .employee-card {
@@ -218,16 +216,14 @@
 </div>
 
 <script>
-  // Configuração da Equipe e Turnos
+  // Configuração da Equipe e Turnos Simplificados
   const employees = ['Gabi', 'Helio', 'Sabrina', 'Stael', 'Sunamita'];
   
   const shifts = {
     'normal':  { emoji: '🏢', label: '8h', hours: 8, class: 's-normal' },
     'plantao': { emoji: '🚨', label: '8h', hours: 8, class: 's-plantao' },
     'sabado':  { emoji: '⏱️', label: '4h', hours: 4, class: 's-sabado' },
-    'folga':   { emoji: '🛋️', label: '0h', hours: 0, class: 's-folga' },
-    'fds':     { emoji: '🛌', label: '0h', hours: 0, class: 's-fds' },
-    'ferias':  { emoji: '🏖️', label: '0h', hours: 0, class: 's-ferias' }
+    'folga':   { emoji: '🛌', label: '0h', hours: 0, class: 's-fds' }
   };
 
   // Gerador de Calendário
@@ -281,7 +277,7 @@
         employees.forEach(emp => {
           // Lógica básica inicial (Padrão para não carregar vazio)
           let defaultShift = 'normal';
-          if (currentWeekDay === 0) defaultShift = 'fds';
+          if (currentWeekDay === 0) defaultShift = 'folga';
           if (currentWeekDay === 6) defaultShift = 'sabado';
           
           cellHtml += `
@@ -315,7 +311,7 @@
     calculateAudit();
   };
 
-  // Motor de Auditoria (A Mágica acontece aqui)
+  // Motor de Auditoria
   function calculateAudit() {
     const auditContent = document.getElementById('auditContent');
     auditContent.innerHTML = '';
