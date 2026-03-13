@@ -15,6 +15,7 @@
     --md-sys-color-secondary: #CCC2DC;
     --md-sys-color-error: #F2B8B5;
     --md-sys-color-success: #C4EED0;
+    --md-sys-color-tertiary: #EFB8C8;
     --md-sys-color-surface-variant: #49454F; /* Cor adicionada para a barra de rolagem */
   }
 
@@ -126,6 +127,8 @@
   }
 
   .emp-name {
+    flex: 1;
+    min-width: 0;
     font-size: 0.65rem;
     font-weight: 500;
     color: var(--md-sys-color-secondary);
@@ -154,6 +157,9 @@
   .s-sabado { background-color: rgba(204, 194, 220, 0.1); color: var(--md-sys-color-on-background); border: 1px solid rgba(204, 194, 220, 0.4); }
   .s-plantao { background-color: rgba(208, 188, 255, 0.2); color: var(--md-sys-color-primary); border: 1px solid rgba(208, 188, 255, 0.5); }
   .s-fds { background-color: rgba(73, 69, 79, 0.3); color: #A8A0B1; border: 1px solid rgba(73, 69, 79, 0.5); }
+  .s-manha { background-color: rgba(196, 238, 208, 0.1); color: var(--md-sys-color-success); border: 1px solid rgba(196, 238, 208, 0.3); }
+  .s-tarde { background-color: rgba(239, 184, 200, 0.1); color: var(--md-sys-color-tertiary); border: 1px dashed rgba(239, 184, 200, 0.4); }
+  .s-ferias { background-color: rgba(242, 184, 181, 0.15); color: var(--md-sys-color-error); border: 1px solid rgba(242, 184, 181, 0.4); }
 
   /* Área de Auditoria (Dashboard Lateral) */
   .audit-area {
@@ -347,6 +353,9 @@
   <span class="s-normal">🏢 7h / 8h / 9h</span>
   <span class="s-plantao">🚨 Plantão (8h)</span>
   <span class="s-sabado">⏱️ Curto (4h)</span>
+  <span class="s-manha">🌅 Manhã (4h)</span>
+  <span class="s-tarde">🌇 Tarde (4h)</span>
+  <span class="s-ferias">🏖️ Férias (0h)</span>
   <span class="s-fds">🛌 Folga (0h)</span>
 </div>
 
@@ -371,6 +380,9 @@
     'normal_9': { emoji: '🏢', label: '9h', hours: 9, class: 's-normal' },
     'plantao':  { emoji: '🚨', label: '8h', hours: 8, class: 's-plantao' },
     'sabado':   { emoji: '⏱️', label: '4h', hours: 4, class: 's-sabado' },
+    'manha':    { emoji: '🌅', label: 'Manhã', hours: 4, class: 's-manha' },
+    'tarde':    { emoji: '🌇', label: 'Tarde', hours: 4, class: 's-tarde' },
+    'ferias':   { emoji: '🏖️', label: 'Férias', hours: 0, class: 's-ferias' },
     'folga':    { emoji: '🛌', label: '0h', hours: 0, class: 's-fds' }
   };
 
