@@ -157,7 +157,7 @@
 
   /* Área de Auditoria (Dashboard Lateral) */
   .audit-area {
-    width: 350px;
+    width: 250px; /* AJUSTE: Reduzido de 350px para 250px para dar mais espaço de tela */
     background-color: var(--md-sys-color-surface);
     border-left: 1px solid var(--md-sys-color-outline);
     display: flex;
@@ -222,7 +222,7 @@
     border: 1px solid var(--md-sys-color-outline);
   }
 
-  /* Responsividade */
+  /* Responsividade Tela Menor */
   @media (max-width: 900px) {
     .main-container { flex-direction: column; overflow-y: auto; }
     .calendar-area { overflow-y: visible; }
@@ -231,6 +231,108 @@
     .day-header { display: none; }
     .day-cell { min-height: auto; padding: 12px; border: 1px solid var(--md-sys-color-outline); background-color: var(--md-sys-color-surface); }
     .date-number::before { content: "Dia "; }
+  }
+
+  /* =========================================
+     ESTILOS DE IMPRESSÃO / PDF
+     ========================================= */
+  @media print {
+    @page {
+      size: landscape;
+      margin: 10mm;
+    }
+
+    body, .main-container, .calendar-area {
+      height: auto !important;
+      overflow: visible !important;
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      display: block !important;
+    }
+
+    /* Oculta elementos desnecessários na impressão */
+    .audit-area, .legend, ::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    header {
+      border-bottom: 2px solid #000 !important;
+      padding: 0 0 12px 0 !important;
+      margin-bottom: 20px !important;
+      background-color: transparent !important;
+    }
+
+    h2 {
+      color: #000000 !important;
+    }
+
+    header div {
+      color: #333333 !important;
+    }
+
+    .calendar-area {
+      padding: 0 !important;
+    }
+
+    .calendar-grid {
+      background-color: transparent !important;
+      border: 1px solid #cccccc !important;
+      gap: 2px !important;
+      padding: 4px !important;
+    }
+
+    .day-header {
+      color: #000000 !important;
+      border-bottom: 1px solid #000000 !important;
+    }
+
+    .day-cell {
+      background-color: #ffffff !important;
+      border: 1px solid #cccccc !important;
+      min-height: auto !important;
+      break-inside: avoid !important;
+    }
+
+    .weekend {
+      background-color: #f4f4f4 !important;
+    }
+
+    .date-number {
+      color: #000000 !important;
+      font-size: 1.1rem !important;
+      border-bottom: 1px solid #eeeeee;
+      width: 100%;
+      text-align: right;
+      padding-bottom: 2px;
+    }
+
+    .emp-name {
+      color: #000000 !important;
+      font-weight: bold !important;
+    }
+
+    /* Transforma o dropdown em texto comum para impressão */
+    .shift-select {
+      background-color: transparent !important;
+      border: none !important;
+      color: #000000 !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+      padding: 0 !important;
+      text-align: right !important;
+      width: auto !important;
+      font-size: 0.7rem !important;
+    }
+    
+    .shift-row {
+      border-bottom: 1px dashed #dddddd;
+      padding: 2px 0;
+    }
+    
+    .shift-row:last-child {
+      border-bottom: none;
+    }
   }
 </style>
 </head>
