@@ -16,7 +16,7 @@
     --md-sys-color-error: #F2B8B5;
     --md-sys-color-success: #C4EED0;
     --md-sys-color-tertiary: #EFB8C8;
-    --md-sys-color-surface-variant: #49454F; /* Cor adicionada para a barra de rolagem */
+    --md-sys-color-surface-variant: #49454F;
   }
 
   body {
@@ -28,12 +28,11 @@
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
-    /* Suporte a barra de rolagem no Firefox */
     scrollbar-width: auto;
     scrollbar-color: var(--md-sys-color-surface-variant) var(--md-sys-color-surface);
   }
 
-  /* Estilização da Barra de Rolagem (Chrome, Edge, Safari) */
+  /* Estilização da Barra de Rolagem */
   ::-webkit-scrollbar {
     width: 12px;
   }
@@ -43,7 +42,7 @@
   ::-webkit-scrollbar-thumb {
     background-color: var(--md-sys-color-surface-variant);
     border-radius: 6px;
-    border: 3px solid var(--md-sys-color-surface); /* Cria um espaço entre a barra e o fundo */
+    border: 3px solid var(--md-sys-color-surface);
   }
   ::-webkit-scrollbar-thumb:hover {
     background-color: var(--md-sys-color-outline);
@@ -67,14 +66,37 @@
     overflow: hidden;
   }
 
-  /* Área do Calendário */
+  /* Painel Esquerdo (Agrupa Legenda + Calendário) */
+  .left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: var(--md-sys-color-secondary);
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px 24px 8px 24px; 
+  }
+
+  .legend span {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--md-sys-color-outline);
+  }
+
   .calendar-area {
     flex: 1;
     overflow-y: auto;
-    padding: 24px;
+    padding: 0 24px 24px 24px; 
   }
 
-  .month-title { color: var(--md-sys-color-secondary); margin-bottom: 16px; margin-top: 32px; border-bottom: 1px solid var(--md-sys-color-outline); padding-bottom: 8px;}
+  .month-title { color: var(--md-sys-color-secondary); margin-bottom: 16px; margin-top: 16px; border-bottom: 1px solid var(--md-sys-color-outline); padding-bottom: 8px;}
   .month-title:first-child { margin-top: 0; }
 
   .calendar-grid {
@@ -118,7 +140,6 @@
     align-self: flex-end;
   }
 
-  /* Linha individual do colaborador */
   .shift-row {
     display: flex;
     justify-content: space-between;
@@ -137,9 +158,9 @@
     text-overflow: ellipsis;
   }
 
-  /* Estilo dos Selects reduzidos */
+  /* Estilo dos Selects */
   .shift-select {
-    width: 60%;
+    width: 76px; /* AJUSTE: Aumentado em ~15% para comportar '🏖️ Férias' sem cortar */
     font-family: 'Roboto Mono', monospace;
     font-size: 0.65rem;
     font-weight: 500;
@@ -148,22 +169,23 @@
     appearance: none;
     cursor: pointer;
     outline: none;
+    text-align: left; 
   }
 
   .shift-select option { background-color: var(--md-sys-color-surface); color: var(--md-sys-color-on-background); font-size: 0.8rem;}
 
-  /* Cores baseadas na seleção (controlado via JS) */
+  /* Cores Suaves Mapeadas */
   .s-normal { background-color: transparent; color: var(--md-sys-color-secondary); border: 1px solid rgba(204, 194, 220, 0.3); }
-  .s-sabado { background-color: rgba(204, 194, 220, 0.1); color: var(--md-sys-color-on-background); border: 1px solid rgba(204, 194, 220, 0.4); }
-  .s-plantao { background-color: rgba(208, 188, 255, 0.2); color: var(--md-sys-color-primary); border: 1px solid rgba(208, 188, 255, 0.5); }
-  .s-fds { background-color: rgba(73, 69, 79, 0.3); color: #A8A0B1; border: 1px solid rgba(73, 69, 79, 0.5); }
-  .s-manha { background-color: rgba(196, 238, 208, 0.1); color: var(--md-sys-color-success); border: 1px solid rgba(196, 238, 208, 0.3); }
-  .s-tarde { background-color: rgba(239, 184, 200, 0.1); color: var(--md-sys-color-tertiary); border: 1px dashed rgba(239, 184, 200, 0.4); }
-  .s-ferias { background-color: rgba(242, 184, 181, 0.15); color: var(--md-sys-color-error); border: 1px solid rgba(242, 184, 181, 0.4); }
+  .s-plantao { background-color: rgba(208, 188, 255, 0.2); color: #D0BCFF; border: 1px solid rgba(208, 188, 255, 0.4); } 
+  .s-sabado { background-color: rgba(180, 180, 180, 0.15); color: #D0D0D0; border: 1px solid rgba(180, 180, 180, 0.4); } 
+  .s-folga { background-color: rgba(168, 230, 207, 0.15); color: #A8E6CF; border: 1px solid rgba(168, 230, 207, 0.4); } 
+  .s-ferias { background-color: rgba(255, 204, 153, 0.15); color: #FFCC99; border: 1px solid rgba(255, 204, 153, 0.4); } 
+  .s-manha { background-color: rgba(253, 253, 150, 0.15); color: #FDFD96; border: 1px solid rgba(253, 253, 150, 0.4); } 
+  .s-tarde { background-color: rgba(174, 196, 232, 0.15); color: #AEC4E8; border: 1px solid rgba(174, 196, 232, 0.4); } 
 
-  /* Área de Auditoria (Dashboard Lateral) */
+  /* Área de Auditoria (Dashboard Lateral) - Cola no Topo */
   .audit-area {
-    width: 250px; /* AJUSTE: Reduzido de 350px para 250px para dar mais espaço de tela */
+    width: 250px;
     background-color: var(--md-sys-color-surface);
     border-left: 1px solid var(--md-sys-color-outline);
     display: flex;
@@ -211,27 +233,11 @@
     font-weight: 700;
   }
   
-  .legend {
-    display: flex;
-    gap: 12px;
-    font-size: 0.75rem;
-    color: var(--md-sys-color-secondary);
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 16px;
-    padding: 0 24px;
-  }
-
-  .legend span {
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--md-sys-color-outline);
-  }
-
   /* Responsividade Tela Menor */
   @media (max-width: 900px) {
     .main-container { flex-direction: column; overflow-y: auto; }
-    .calendar-area { overflow-y: visible; }
+    .left-panel { overflow-y: visible; }
+    .calendar-area { overflow-y: visible; padding: 12px; }
     .audit-area { width: 100%; border-left: none; border-top: 1px solid var(--md-sys-color-outline); overflow-y: visible; }
     .calendar-grid { grid-template-columns: repeat(1, 1fr); gap: 12px; padding: 0; background: transparent; border: none;}
     .day-header { display: none; }
@@ -248,7 +254,7 @@
       margin: 10mm;
     }
 
-    body, .main-container, .calendar-area {
+    body, .main-container, .left-panel, .calendar-area {
       height: auto !important;
       overflow: visible !important;
       background-color: #ffffff !important;
@@ -256,7 +262,6 @@
       display: block !important;
     }
 
-    /* Oculta elementos desnecessários na impressão */
     .audit-area, .legend, ::-webkit-scrollbar {
       display: none !important;
     }
@@ -268,17 +273,9 @@
       background-color: transparent !important;
     }
 
-    h2 {
-      color: #000000 !important;
-    }
-
-    header div {
-      color: #333333 !important;
-    }
-
-    .calendar-area {
-      padding: 0 !important;
-    }
+    h2 { color: #000000 !important; }
+    header div { color: #333333 !important; }
+    .calendar-area { padding: 0 !important; }
 
     .calendar-grid {
       background-color: transparent !important;
@@ -299,9 +296,7 @@
       break-inside: avoid !important;
     }
 
-    .weekend {
-      background-color: #f4f4f4 !important;
-    }
+    .weekend { background-color: #f4f4f4 !important; }
 
     .date-number {
       color: #000000 !important;
@@ -317,7 +312,6 @@
       font-weight: bold !important;
     }
 
-    /* Transforma o dropdown em texto comum para impressão */
     .shift-select {
       background-color: transparent !important;
       border: none !important;
@@ -326,7 +320,7 @@
       -moz-appearance: none !important;
       appearance: none !important;
       padding: 0 !important;
-      text-align: right !important;
+      text-align: left !important;
       width: auto !important;
       font-size: 0.7rem !important;
     }
@@ -336,9 +330,7 @@
       padding: 2px 0;
     }
     
-    .shift-row:last-child {
-      border-bottom: none;
-    }
+    .shift-row:last-child { border-bottom: none; }
   }
 </style>
 </head>
@@ -349,19 +341,21 @@
   <div style="font-size: 0.8rem; color: var(--md-sys-color-secondary);">Limites: 44h semanais | Máx 6 dias seguidos</div>
 </header>
 
-<div class="legend">
-  <span class="s-normal">🏢 7h / 8h / 9h</span>
-  <span class="s-plantao">🚨 Plantão (8h)</span>
-  <span class="s-sabado">⏱️ Curto (4h)</span>
-  <span class="s-manha">🌅 Manhã (4h)</span>
-  <span class="s-tarde">🌇 Tarde (4h)</span>
-  <span class="s-ferias">🏖️ Férias (0h)</span>
-  <span class="s-fds">🛌 Folga (0h)</span>
-</div>
-
 <div class="main-container">
-  <div class="calendar-area" id="calendarArea">
+  <div class="left-panel">
+    <div class="legend">
+      <span class="s-normal">🏢 7h / 8h / 9h</span>
+      <span class="s-plantao">🚨 Plantão (8h)</span>
+      <span class="s-sabado">⏱️ Curto (4h)</span>
+      <span class="s-manha">🌅 Manhã (4h)</span>
+      <span class="s-tarde">🌇 Tarde (4h)</span>
+      <span class="s-ferias">🏖️ Férias (0h)</span>
+      <span class="s-folga">🌴 Folga (0h)</span>
     </div>
+
+    <div class="calendar-area" id="calendarArea">
+      </div>
+  </div>
 
   <div class="audit-area">
     <div class="audit-header">📊 Análise em Tempo Real</div>
@@ -383,7 +377,7 @@
     'manha':    { emoji: '🌅', label: 'Manhã', hours: 4, class: 's-manha' },
     'tarde':    { emoji: '🌇', label: 'Tarde', hours: 4, class: 's-tarde' },
     'ferias':   { emoji: '🏖️', label: 'Férias', hours: 0, class: 's-ferias' },
-    'folga':    { emoji: '🛌', label: '0h', hours: 0, class: 's-fds' }
+    'folga':    { emoji: '🌴', label: 'Folga', hours: 0, class: 's-folga' }
   };
 
   // Gerador de Calendário
@@ -442,7 +436,7 @@
           
           cellHtml += `
             <div class="shift-row">
-              <span class="emp-name">${emp}</span>
+              <span class="emp-name" title="${emp}">${emp}</span>
               <select class="shift-select ${shifts[defaultShift].class}" 
                       data-emp="${emp}" 
                       data-day="${globalDayCounter}"
@@ -512,8 +506,6 @@
         
         // Lógica de fechamento de semana: FECHA ANTES DE SOMAR O DOMINGO NOVO
         if (actualWeekDay === 0 && i !== 0) {
-          // Chegou no domingo (e não é o primeiro dia do calendário).
-          // Salva a semana ANTERIOR.
           const alertClass = weeklyHours > 44 ? 'stat-alert' : '';
           htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekCount}:</span> <span>${weeklyHours}h</span></div>`;
           
