@@ -15,6 +15,7 @@
     --md-sys-color-secondary: #CCC2DC;
     --md-sys-color-error: #F2B8B5;
     --md-sys-color-success: #C4EED0;
+    --md-sys-color-surface-variant: #49454F; /* Cor adicionada para a barra de rolagem */
   }
 
   body {
@@ -26,6 +27,25 @@
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
+    /* Suporte a barra de rolagem no Firefox */
+    scrollbar-width: auto;
+    scrollbar-color: var(--md-sys-color-surface-variant) var(--md-sys-color-surface);
+  }
+
+  /* Estilização da Barra de Rolagem (Chrome, Edge, Safari) */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--md-sys-color-surface);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--md-sys-color-surface-variant);
+    border-radius: 6px;
+    border: 3px solid var(--md-sys-color-surface); /* Cria um espaço entre a barra e o fundo */
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--md-sys-color-outline);
   }
 
   header {
