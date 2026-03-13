@@ -122,7 +122,9 @@
     background-color: rgba(255, 255, 255, 0.02);
     border-radius: 6px;
     padding: 6px;
-    min-height: 150px;
+    /* MELHORIA 1: Flexibilidade Vertical */
+    height: auto; 
+    min-height: 120px; 
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -160,7 +162,10 @@
 
   /* Estilo dos Selects */
   .shift-select {
-    width: 76px; /* AJUSTE: Aumentado em ~15% para comportar '🏖️ Férias' sem cortar */
+    /* MELHORIA 2: Largura Dinâmica */
+    min-width: 76px; 
+    max-width: 90px;
+    flex-shrink: 0; 
     font-family: 'Roboto Mono', monospace;
     font-size: 0.65rem;
     font-weight: 500;
@@ -233,7 +238,16 @@
     font-weight: 700;
   }
   
-  /* Responsividade Tela Menor */
+  /* MELHORIA 3: Responsividade e Zoom */
+  
+  /* Ponto de Quebra Intermediário (Para Zoom ou Telas Médias) */
+  @media (max-width: 1200px) {
+    .audit-area { width: 220px; } /* Reduz a barra lateral */
+    .shift-select { font-size: 0.6rem; min-width: 68px; padding: 2px; } /* Ajusta os botões */
+    .emp-name { font-size: 0.6rem; }
+  }
+
+  /* Ponto de Quebra Mobile/Zoom Elevado */
   @media (max-width: 900px) {
     .main-container { flex-direction: column; overflow-y: auto; }
     .left-panel { overflow-y: visible; }
@@ -243,6 +257,8 @@
     .day-header { display: none; }
     .day-cell { min-height: auto; padding: 12px; border: 1px solid var(--md-sys-color-outline); background-color: var(--md-sys-color-surface); }
     .date-number::before { content: "Dia "; }
+    .shift-select { font-size: 0.7rem; min-width: 80px; } /* Restaura tamanho bom para mobile */
+    .emp-name { font-size: 0.7rem; }
   }
 
   /* =========================================
@@ -365,19 +381,19 @@
 </div>
 
 <script>
-  // Configuração da Equipe e Turnos Atualizados
+  // Configuração da Equipe e Turnos Atualizados com Nova Ordem
   const employees = ['Gabi', 'Helio', 'Sabrina', 'Stael', 'Sunamita'];
   
   const shifts = {
     'normal_7': { emoji: '🏢', label: '7h', hours: 7, class: 's-normal' },
     'normal':   { emoji: '🏢', label: '8h', hours: 8, class: 's-normal' },
     'normal_9': { emoji: '🏢', label: '9h', hours: 9, class: 's-normal' },
-    'plantao':  { emoji: '🚨', label: '8h', hours: 8, class: 's-plantao' },
     'sabado':   { emoji: '⏱️', label: '4h', hours: 4, class: 's-sabado' },
-    'manha':    { emoji: '🌅', label: 'Manhã', hours: 4, class: 's-manha' },
-    'tarde':    { emoji: '🌇', label: 'Tarde', hours: 4, class: 's-tarde' },
+    'plantao':  { emoji: '🚨', label: 'Plantão', hours: 8, class: 's-plantao' },
+    'folga':    { emoji: '🌴', label: 'Folga', hours: 0, class: 's-folga' },
     'ferias':   { emoji: '🏖️', label: 'Férias', hours: 0, class: 's-ferias' },
-    'folga':    { emoji: '🌴', label: 'Folga', hours: 0, class: 's-folga' }
+    'manha':    { emoji: '🌅', label: 'Manhã', hours: 4, class: 's-manha' },
+    'tarde':    { emoji: '🌇', label: 'Tarde', hours: 4, class: 's-tarde' }
   };
 
   // Gerador de Calendário
@@ -389,12 +405,12 @@
   const calendarArea = document.getElementById('calendarArea');
   let globalDayCounter = 0; // Para rastrear a sequência contínua de dias
 
-  // Função para criar as opções do Select
+  // Função para criar as opções do Select - Espaço entre emoji e label removido
   function createSelectOptions(selectedKey) {
     let html = '';
     for (const [key, shift] of Object.entries(shifts)) {
       const isSelected = key === selectedKey ? 'selected' : '';
-      html += `<option value="${key}" ${isSelected}>${shift.emoji} ${shift.label}</option>`;
+      html += `<option value="${key}" ${isSelected}>${shift.emoji}${shift.label}</option>`;
     }
     return html;
   }
