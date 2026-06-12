@@ -18,7 +18,6 @@
     --md-sys-color-success: #C4EED0;
     --md-sys-color-surface-variant: #49454F;
     
-    /* Variável para a largura da auditoria */
     --audit-panel-width: 250px;
   }
 
@@ -44,7 +43,6 @@
   }
   ::-webkit-scrollbar-thumb:hover { background-color: var(--md-sys-color-outline); }
 
-  /* CABEÇALHO */
   header {
     background-color: var(--md-sys-color-surface);
     padding: 12px 24px;
@@ -57,43 +55,20 @@
     z-index: 10;
   }
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .header-right { display: flex; align-items: center; gap: 12px; }
   
-  /* Ajuste no agrupamento direito do cabeçalho */
-  .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-  }
-  
-  /* Botão Menu Hambúrguer movido para a direita */
   .menu-btn {
-    background: none;
-    border: none;
-    color: var(--md-sys-color-primary);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: none; border: none; color: var(--md-sys-color-primary);
+    font-size: 1.5rem; cursor: pointer; padding: 4px 8px;
+    border-radius: 4px; transition: background-color 0.2s;
+    display: flex; align-items: center; justify-content: center;
   }
-  .menu-btn:hover {
-    background-color: rgba(208, 188, 255, 0.1);
-  }
+  .menu-btn:hover { background-color: rgba(208, 188, 255, 0.1); }
 
   h2 { margin: 0; color: var(--md-sys-color-primary); font-size: 1.2rem; text-transform: uppercase; white-space: nowrap;}
 
-  .selectors-group {
-    display: flex;
-    gap: 8px;
-  }
+  .selectors-group { display: flex; gap: 8px; }
 
   .custom-selector, .btn-legend {
     background-color: var(--md-sys-color-background);
@@ -104,8 +79,7 @@
     font-family: 'Roboto Mono', monospace;
     font-size: 0.9rem;
     font-weight: 700;
-    outline: none;
-    cursor: pointer;
+    outline: none; cursor: pointer;
     transition: background-color 0.2s;
   }
 
@@ -118,193 +92,85 @@
     background-color: rgba(208, 188, 255, 0.1);
   }
 
-  /* MODAL DE LEGENDA */
   .modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+    display: none; justify-content: center; align-items: center; z-index: 1000;
   }
   .modal-overlay.active { display: flex; }
 
   .modal-content {
     background-color: var(--md-sys-color-surface);
-    padding: 24px;
-    border-radius: 12px;
-    border: 1px solid var(--md-sys-color-outline);
-    max-width: 800px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
+    padding: 24px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline);
+    max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;
   }
 
   .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--md-sys-color-outline);
-    padding-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px; border-bottom: 1px solid var(--md-sys-color-outline); padding-bottom: 8px;
   }
 
   .modal-header h3 { margin: 0; color: var(--md-sys-color-primary); }
-  
-  .close-modal {
-    background: none; border: none;
-    color: var(--md-sys-color-on-background);
-    font-size: 1.5rem; cursor: pointer;
-  }
+  .close-modal { background: none; border: none; color: var(--md-sys-color-on-background); font-size: 1.5rem; cursor: pointer; }
 
-  .legend-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 12px;
-  }
+  .legend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
 
   .legend-item {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid var(--md-sys-color-outline);
-    font-size: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 8px; border-radius: 6px; border: 1px solid var(--md-sys-color-outline);
+    font-size: 0.8rem; display: flex; align-items: center; gap: 8px;
   }
+  .legend-item small { display: block; font-size: 0.65rem; opacity: 0.7; margin-top: 2px; }
 
-  .legend-item small {
-      display: block;
-      font-size: 0.65rem;
-      opacity: 0.7;
-      margin-top: 2px;
-  }
+  .main-container { display: flex; flex: 1; overflow: hidden; }
+  .left-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
-  .main-container {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  .left-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  /* CALENDÁRIO */
   .calendar-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 12px 24px 24px 24px;
-    overflow-y: auto; 
+    flex: 1; display: flex; flex-direction: column;
+    padding: 12px 24px 24px 24px; overflow-y: auto; 
   }
 
   .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: max-content; 
-    grid-auto-rows: minmax(130px, auto);  
-    gap: 6px;
-    background-color: var(--md-sys-color-surface);
-    padding: 8px;
-    border-radius: 12px;
-    border: 1px solid var(--md-sys-color-outline);
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: max-content; grid-auto-rows: minmax(130px, auto);  
+    gap: 6px; background-color: var(--md-sys-color-surface);
+    padding: 8px; border-radius: 12px; border: 1px solid var(--md-sys-color-outline);
     box-sizing: border-box;
   }
 
   .day-header {
-    color: var(--md-sys-color-primary);
-    font-weight: 700;
-    text-align: center;
-    padding-bottom: 4px;
-    border-bottom: 1px solid var(--md-sys-color-outline);
-    font-size: 0.85rem;
+    color: var(--md-sys-color-primary); font-weight: 700; text-align: center;
+    padding-bottom: 4px; border-bottom: 1px solid var(--md-sys-color-outline); font-size: 0.85rem;
   }
 
   .day-cell {
-    background-color: rgba(255, 255, 255, 0.02);
-    border-radius: 6px;
-    padding: 6px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background-color: rgba(255, 255, 255, 0.02); border-radius: 6px; padding: 6px;
+    display: flex; flex-direction: column; gap: 4px; border: 1px solid rgba(255, 255, 255, 0.04);
     justify-content: flex-start;
   }
 
   .empty-cell { background-color: transparent; border: none; }
   .weekend { background-color: rgba(255, 255, 255, 0.04); }
 
-  .date-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 4px;
-    flex-shrink: 0;
-  }
+  .date-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; flex-shrink: 0; }
+  .date-number { font-weight: 700; font-size: 0.95rem; color: var(--md-sys-color-on-background); margin: 0; }
+  .holiday-name { font-size: 0.55rem; color: var(--md-sys-color-error); font-weight: 700; text-transform: uppercase; text-align: left; max-width: 65%; }
+  .holiday-cell { background-color: rgba(242, 184, 181, 0.08); border: 1px solid rgba(242, 184, 181, 0.3); }
 
-  .date-number {
-    font-weight: 700;
-    font-size: 0.95rem; 
-    color: var(--md-sys-color-on-background);
-    margin: 0;
-  }
-
-  .holiday-name {
-    font-size: 0.55rem;
-    color: var(--md-sys-color-error);
-    font-weight: 700;
-    text-transform: uppercase;
-    text-align: left;
-    max-width: 65%;
-  }
-
-  .holiday-cell {
-    background-color: rgba(242, 184, 181, 0.08);
-    border: 1px solid rgba(242, 184, 181, 0.3);
-  }
-
-  .shift-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
+  .shift-row { display: flex; justify-content: space-between; align-items: center; gap: 4px; flex-shrink: 0; }
 
   .emp-name {
-    flex: 1;
-    min-width: 0;
-    font-size: 0.7rem; 
-    font-weight: 500;
-    color: var(--md-sys-color-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    flex: 1; min-width: 0; font-size: 0.7rem; font-weight: 500;
+    color: var(--md-sys-color-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
 
   .shift-select {
-    min-width: 80px; 
-    max-width: 95px;
-    flex-shrink: 0; 
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.65rem; 
-    font-weight: 500;
-    padding: 2px 4px;
-    border-radius: 4px;
-    appearance: none;
-    cursor: pointer;
-    outline: none;
-    text-align: left; 
+    min-width: 80px; max-width: 95px; flex-shrink: 0; 
+    font-family: 'Roboto Mono', monospace; font-size: 0.65rem; font-weight: 500;
+    padding: 2px 4px; border-radius: 4px; appearance: none; cursor: pointer;
+    outline: none; text-align: left; 
   }
-
   .shift-select option { background-color: var(--md-sys-color-surface); color: var(--md-sys-color-on-background); font-size: 0.8rem;}
 
-  /* CORES DOS TURNOS */
   .s-adm { background-color: rgba(255, 105, 97, 0.15); color: #FF6961; border: 1px solid rgba(255, 105, 97, 0.4); } 
   .s-h1 { background-color: rgba(135, 206, 235, 0.15); color: #87CEEB; border: 1px solid rgba(135, 206, 235, 0.4); } 
   .s-h2 { background-color: rgba(70, 130, 180, 0.15); color: #82b1ff; border: 1px solid rgba(70, 130, 180, 0.4); }
@@ -315,51 +181,25 @@
   .s-lic-mat { background-color: rgba(244, 143, 177, 0.15); color: #F48FB1; border: 1px solid rgba(244, 143, 177, 0.4); } 
   .s-lic-cas { background-color: rgba(218, 165, 32, 0.15); color: #DAA520; border: 1px solid rgba(218, 165, 32, 0.4); } 
 
-  /* Área de Auditoria (Recolhível) */
   .audit-area {
-    width: var(--audit-panel-width);
-    min-width: var(--audit-panel-width);
-    background-color: var(--md-sys-color-surface);
-    border-left: 1px solid var(--md-sys-color-outline);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    transition: margin-right 0.3s ease-in-out; 
+    width: var(--audit-panel-width); min-width: var(--audit-panel-width);
+    background-color: var(--md-sys-color-surface); border-left: 1px solid var(--md-sys-color-outline);
+    display: flex; flex-direction: column; overflow-y: auto; transition: margin-right 0.3s ease-in-out; 
   }
-
-  .audit-area.collapsed {
-    margin-right: calc(var(--audit-panel-width) * -1);
-  }
+  .audit-area.collapsed { margin-right: calc(var(--audit-panel-width) * -1); }
 
   .audit-header {
-    padding: 16px;
-    background-color: var(--md-sys-color-surface); 
+    padding: 16px; background-color: var(--md-sys-color-surface); 
     border-bottom: 1px solid var(--md-sys-color-outline);
-    position: sticky;
-    top: 0;
-    font-weight: 700;
-    color: var(--md-sys-color-primary);
-    z-index: 5; 
+    position: sticky; top: 0; font-weight: 700; color: var(--md-sys-color-primary); z-index: 5; 
   }
 
-  .employee-card {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--md-sys-color-outline);
-  }
+  .employee-card { padding: 12px 16px; border-bottom: 1px solid var(--md-sys-color-outline); }
 
   .emp-acc-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--md-sys-color-on-background);
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 8px;
-    padding: 4px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 1rem; font-weight: 700; color: var(--md-sys-color-on-background);
+    cursor: pointer; user-select: none; margin-bottom: 8px; padding: 4px; border-radius: 4px; transition: background-color 0.2s;
   }
   .emp-acc-header:hover { background-color: rgba(255,255,255,0.05); }
   .emp-acc-body { display: none; } 
@@ -368,20 +208,13 @@
   .emp-acc-body.active + .acc-icon, .acc-icon.active { transform: rotate(180deg); }
 
   .stat-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    margin-bottom: 4px;
-    padding: 4px 8px;
-    background-color: rgba(255,255,255,0.02);
-    border-radius: 4px;
+    display: flex; justify-content: space-between; font-size: 0.75rem;
+    margin-bottom: 4px; padding: 4px 8px; background-color: rgba(255,255,255,0.02); border-radius: 4px;
   }
 
   .stat-alert {
     background-color: rgba(242, 184, 181, 0.15) !important;
-    color: var(--md-sys-color-error);
-    border: 1px solid var(--md-sys-color-error);
-    font-weight: 700;
+    color: var(--md-sys-color-error); border: 1px solid var(--md-sys-color-error); font-weight: 700;
   }
   
   @media (max-width: 1200px) {
@@ -395,18 +228,8 @@
     .main-container { flex-direction: column; overflow-y: auto; }
     .left-panel { overflow-y: visible; }
     .calendar-area { overflow-y: visible; padding: 12px; }
-    
     .menu-btn { display: none; } 
-
-    .audit-area { 
-        width: 100%; 
-        min-width: 100%;
-        margin-right: 0 !important; 
-        border-left: none; 
-        border-top: 1px solid var(--md-sys-color-outline); 
-        overflow-y: visible; 
-    }
-    
+    .audit-area { width: 100%; min-width: 100%; margin-right: 0 !important; border-left: none; border-top: 1px solid var(--md-sys-color-outline); overflow-y: visible; }
     .calendar-grid { grid-template-columns: 1fr; gap: 12px; padding: 0; background: transparent; border: none;}
     .day-header { display: none; }
     .empty-cell { display: none; }
@@ -456,26 +279,26 @@
       <h3>ℹ️ Legenda Oficial de Turnos</h3>
       <button class="close-modal" onclick="toggleModal(false)">×</button>
     </div>
-    <div class="legend-grid" id="modalLegendGrid">
-      </div>
+    <div class="legend-grid" id="modalLegendGrid"></div>
   </div>
 </div>
 
 <div class="main-container">
   <div class="left-panel">
-    <div class="calendar-area" id="calendarArea">
-      </div>
+    <div class="calendar-area" id="calendarArea"></div>
   </div>
-
   <div class="audit-area" id="auditPanel">
     <div class="audit-header">📊 Análise de Tempo</div>
-    <div id="auditContent">
-      </div>
+    <div id="auditContent"></div>
   </div>
 </div>
 
 <script>
-  const employees = ['Gabi', 'Helio', 'João', 'Sabrina', 'Stael', 'Sunamita'];
+  // COLOQUE O LINK DO SEU GOOGLE APPS SCRIPT AQUI 👇
+  const apiURL = "COLE_O_LINK_DO_WEB_APP_AQUI"; 
+  
+  // Agora a lista de colaboradores começa vazia e será preenchida pela planilha
+  let employees = []; 
   
   const shifts = {
     'adm':      { emoji: '💼', label: 'ADM', detail: '08:00 - 18:00', hours: 9, class: 's-adm' },
@@ -483,22 +306,17 @@
     'h1_4':     { emoji: '🟦', label: 'H1', detail: '08:00 - 12:00', hours: 4, class: 's-h1' },
     'h2_8':     { emoji: '💠', label: 'H2', detail: '09:00 - 18:00', hours: 8, class: 's-h2' },
     'h2_4':     { emoji: '💠', label: 'H2', detail: '09:00 - 13:00', hours: 4, class: 's-h2' },
-    
     'plantao':  { emoji: '🚨', label: 'Plantão', detail: '09:00 - 18:00', hours: 8, class: 's-plantao' },
-    
     'folga':    { emoji: '🌴', label: 'Folga', detail: '0h', hours: 0, class: 's-folga' },
-    'folga_m4': { emoji: '🌴', label: 'Folga M.', detail: 'Banco', hours: -4, class: 's-folga' },
     'folga_m5': { emoji: '🌴', label: 'Folga M.', detail: 'Banco', hours: -5, class: 's-folga' },
     'folga_p':  { emoji: '🏆', label: 'Folga P.', detail: '0h', hours: 0, class: 's-folga' },
     'ferias':   { emoji: '🏖️', label: 'Férias', detail: '0h', hours: 0, class: 's-ferias' },
-    
     'lic_med':  { emoji: '🩺', label: 'Licença M.', detail: '0h', hours: 0, class: 's-lic-medica' },
     'lic_mat':  { emoji: '🤰', label: 'Licença M.', detail: '0h', hours: 0, class: 's-lic-mat' },
     'lic_cas':  { emoji: '💍', label: 'Licença C.', detail: '0h', hours: 0, class: 's-lic-cas' }
   };
 
   const yearsAvailable = [2026, 2027, 2028];
-  
   let appState = {};
   let currentMonthIndex = 0; 
   let currentYear = 2026;
@@ -510,43 +328,23 @@
 
   function getHolidaysForYear(year) {
     const holidays = {
-      '01-01': 'Confrat. Universal',
-      '04-21': 'Tiradentes',
-      '04-23': 'São Jorge', 
-      '05-01': 'Dia do Trabalho',
-      '09-07': 'Independência',
-      '10-12': 'Nossa Sra. Aparecida',
-      '11-02': 'Finados',
-      '11-15': 'Proc. da República',
-      '11-20': 'Consciência Negra', 
-      '12-25': 'Natal'
+      '01-01': 'Confrat. Universal', '04-21': 'Tiradentes', '04-23': 'São Jorge', 
+      '05-01': 'Dia do Trabalho', '09-07': 'Independência', '10-12': 'Nossa Sra. Aparecida',
+      '11-02': 'Finados', '11-15': 'Proc. da República', '11-20': 'Consciência Negra', '12-25': 'Natal'
     };
 
-    let a = year % 19;
-    let b = Math.floor(year / 100);
-    let c = year % 100;
-    let d = Math.floor(b / 4);
-    let e = b % 4;
-    let f = Math.floor((b + 8) / 25);
-    let g = Math.floor((b - f + 1) / 3);
-    let h = (19 * a + b - d - g + 15) % 30;
-    let i = Math.floor(c / 4);
-    let k = c % 4;
-    let l = (32 + 2 * e + 2 * i - h - k) % 7;
+    let a = year % 19; let b = Math.floor(year / 100); let c = year % 100;
+    let d = Math.floor(b / 4); let e = b % 4; let f = Math.floor((b + 8) / 25);
+    let g = Math.floor((b - f + 1) / 3); let h = (19 * a + b - d - g + 15) % 30;
+    let i = Math.floor(c / 4); let k = c % 4; let l = (32 + 2 * e + 2 * i - h - k) % 7;
     let m = Math.floor((a + 11 * h + 22 * l) / 451);
     let month = Math.floor((h + l - 7 * m + 114) / 31);
     let p_day = ((h + l - 7 * m + 114) % 31) + 1;
 
     let easter = new Date(year, month - 1, p_day);
-
-    let goodFriday = new Date(easter);
-    goodFriday.setDate(easter.getDate() - 2);
-    
-    let carnival = new Date(easter);
-    carnival.setDate(easter.getDate() - 47);
-
-    let corpus = new Date(easter);
-    corpus.setDate(easter.getDate() + 60);
+    let goodFriday = new Date(easter); goodFriday.setDate(easter.getDate() - 2);
+    let carnival = new Date(easter); carnival.setDate(easter.getDate() - 47);
+    let corpus = new Date(easter); corpus.setDate(easter.getDate() + 60);
 
     const formatDt = (dt) => String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
 
@@ -557,15 +355,8 @@
     return holidays;
   }
 
-  window.toggleModal = function(show) {
-    document.getElementById('legendModal').classList.toggle('active', show);
-  };
-
-  window.handleModalClick = function(event) {
-    if (event.target === document.getElementById('legendModal')) {
-      toggleModal(false);
-    }
-  };
+  window.toggleModal = function(show) { document.getElementById('legendModal').classList.toggle('active', show); };
+  window.handleModalClick = function(event) { if (event.target === document.getElementById('legendModal')) toggleModal(false); };
 
   function populateModalLegend() {
     const grid = document.getElementById('modalLegendGrid');
@@ -574,13 +365,8 @@
       grid.innerHTML += `
         <div class="legend-item ${shift.class}">
           <div style="font-size: 1.2rem;">${shift.emoji}</div>
-          <div style="flex: 1;">
-              <strong>${shift.label}</strong>
-              <small>${shift.detail}</small>
-          </div>
-          <div style="color: var(--md-sys-color-on-background); font-weight: bold;">
-              ${shift.hours}h
-          </div>
+          <div style="flex: 1;"><strong>${shift.label}</strong><small>${shift.detail}</small></div>
+          <div style="color: var(--md-sys-color-on-background); font-weight: bold;">${shift.hours}h</div>
         </div>
       `;
     }
@@ -589,27 +375,82 @@
   function getDaysInMonth(year, monthIndex) { return new Date(year, monthIndex + 1, 0).getDate(); }
   function getStartDay(year, monthIndex) { return new Date(year, monthIndex, 1).getDay(); }
 
-  function initializeState() {
-    employees.forEach(emp => {
-      appState[emp] = {}; 
-      yearsAvailable.forEach(year => {
-        appState[emp][year] = {};
-        for(let m = 0; m < 12; m++) {
-          appState[emp][year][m] = []; 
-          const daysInMonth = getDaysInMonth(year, m);
-          const startDay = getStartDay(year, m);
-          
-          for(let d = 0; d < daysInMonth; d++) {
-            const currentWeekDay = (startDay + d) % 7;
-            let defaultShift = 'h2_8'; 
-            if (currentWeekDay === 0) defaultShift = 'folga'; 
-            if (currentWeekDay === 6) defaultShift = 'h1_4'; 
-            
-            appState[emp][year][m].push(defaultShift);
-          }
-        }
+  // Função central para conectar na planilha
+  async function carregarEscala() {
+    const calendarArea = document.getElementById('calendarArea');
+    calendarArea.innerHTML = '<div style="text-align: center; color: var(--md-sys-color-primary); margin-top: 50px; font-size: 1.2rem;">⏳ Conectando à Planilha de Escala...</div>';
+
+    try {
+      if (apiURL === "COLE_O_LINK_DO_WEB_APP_AQUI") {
+          throw new Error("Link da API não configurado. Por favor, cole o URL gerado no Apps Script.");
+      }
+
+      const response = await fetch(apiURL);
+      const result = await response.json();
+      
+      if (!result.success) throw new Error(result.error);
+      
+      const dataPlanilha = result.data;
+      const apiYear = result.year;
+      currentYear = apiYear;
+      document.getElementById('yearSelector').value = apiYear;
+
+      // Cria a lista de funcionários dinamicamente a partir do mês 0 (Janeiro)
+      const nameSet = new Set();
+      if (dataPlanilha[apiYear] && dataPlanilha[apiYear][0]) {
+         Object.keys(dataPlanilha[apiYear][0]).forEach(name => nameSet.add(name));
+      }
+      employees = Array.from(nameSet).sort(); // Ordena alfabeticamente!
+
+      // Inicializa a estrutura vazia do sistema
+      appState = {};
+      employees.forEach(emp => {
+        appState[emp] = {};
+        yearsAvailable.forEach(y => {
+          appState[emp][y] = {};
+          for(let m = 0; m < 12; m++) { appState[emp][y][m] = []; }
+        });
       });
-    });
+
+      // Aplica a "Tradução" da planilha para o sistema visual
+      for(let m=0; m<12; m++) {
+          const daysInMonth = getDaysInMonth(apiYear, m);
+          const startDay = getStartDay(apiYear, m);
+          
+          employees.forEach(emp => {
+              const monthData = dataPlanilha[apiYear][m][emp];
+              for(let d=0; d<daysInMonth; d++) {
+                  const rawShift = monthData && monthData[d] ? monthData[d] : 'FO'; 
+                  const dayOfWeek = (startDay + d) % 7; // 0=Dom, 1=Seg... 6=Sab
+                  
+                  let translated = 'folga'; // Padrão seguro
+                  const code = String(rawShift).toUpperCase().trim();
+                  
+                  // REGRAS DE TRADUÇÃO EXATAS
+                  if (code === 'H1') translated = (dayOfWeek >= 1 && dayOfWeek <= 5) ? 'h1_9' : 'h1_4';
+                  else if (code === 'H2') translated = (dayOfWeek >= 1 && dayOfWeek <= 5) ? 'h2_8' : 'h2_4';
+                  else if (code === 'ADM') translated = 'adm';
+                  else if (code === 'P' || code === 'P-FE') translated = 'plantao';
+                  else if (code === 'FO' || code === 'FO-F') translated = 'folga';
+                  else if (code === 'FO-M') translated = 'folga_m5'; 
+                  else if (code === 'FO-P') translated = 'folga_p';
+                  else if (code === 'FER') translated = 'ferias';
+                  else if (code === 'L-ME') translated = 'lic_med';
+                  else if (code === 'L-MA') translated = 'lic_mat';
+                  else if (code === 'L-CA') translated = 'lic_cas';
+                  
+                  appState[emp][apiYear][m][d] = translated;
+              }
+          });
+      }
+      
+      renderCalendar();
+      calculateAudit();
+
+    } catch (error) {
+      console.error("Erro na integração:", error);
+      calendarArea.innerHTML = `<div style="text-align: center; color: var(--md-sys-color-error); margin-top: 50px;">❌ Erro ao buscar escala: ${error.message}</div>`;
+    }
   }
 
   function createSelectOptions(selectedKey) {
@@ -623,7 +464,7 @@
 
   window.changeDate = function() {
     currentMonthIndex = parseInt(document.getElementById('monthSelector').value);
-    currentYear = parseInt(document.getElementById('yearSelector').value);
+    // currentYear = parseInt(document.getElementById('yearSelector').value); // Desabilitado temporariamente, API fixa no ano da planilha ativa
     renderCalendar();
     calculateAudit();
   };
@@ -640,13 +481,9 @@
     grid.className = 'calendar-grid';
     
     const daysOfWeek = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
-    daysOfWeek.forEach(d => {
-      grid.innerHTML += `<div class="day-header">${d}</div>`;
-    });
+    daysOfWeek.forEach(d => { grid.innerHTML += `<div class="day-header">${d}</div>`; });
 
-    for (let i = 0; i < startDay; i++) {
-      grid.innerHTML += `<div class="day-cell empty-cell"></div>`;
-    }
+    for (let i = 0; i < startDay; i++) { grid.innerHTML += `<div class="day-cell empty-cell"></div>`; }
 
     for (let day = 1; day <= daysInMonth; day++) {
       const dayIndex = day - 1; 
@@ -658,24 +495,14 @@
       const isHoliday = holidayName !== undefined;
       
       let cellClass = `day-cell ${isWeekend ? 'weekend' : ''} ${isHoliday ? 'holiday-cell' : ''}`;
-      
-      let cellHtml = `<div class="${cellClass}">`;
-      
-      cellHtml += `
-        <div class="date-header-row">
-          <span class="holiday-name">${isHoliday ? holidayName : ''}</span>
-          <span class="date-number">${day}</span>
-        </div>
-      `;
+      let cellHtml = `<div class="${cellClass}"><div class="date-header-row"><span class="holiday-name">${isHoliday ? holidayName : ''}</span><span class="date-number">${day}</span></div>`;
       
       employees.forEach(emp => {
         const savedShift = appState[emp][currentYear][currentMonthIndex][dayIndex];
-        
         cellHtml += `
           <div class="shift-row">
             <span class="emp-name" title="${emp}">${emp}</span>
-            <select class="shift-select ${shifts[savedShift].class}" 
-                    onchange="updateShift(this, '${emp}', ${currentYear}, ${currentMonthIndex}, ${dayIndex})">
+            <select class="shift-select ${shifts[savedShift].class}" onchange="updateShift(this, '${emp}', ${currentYear}, ${currentMonthIndex}, ${dayIndex})">
               ${createSelectOptions(savedShift)}
             </select>
           </div>
@@ -719,47 +546,31 @@
         }
       }
 
-      let weeks = [];
-      let cWeekHours = 0;
-      let cWeekMonths = new Set();
-
-      let maxConsecutive = 0;
-      let currentStreak = 0;
-      let streakTouchesCurrentMonth = false;
+      let weeks = []; let cWeekHours = 0; let cWeekMonths = new Set();
+      let maxConsecutive = 0; let currentStreak = 0; let streakTouchesCurrentMonth = false;
 
       for (let i = 0; i < yearDays.length; i++) {
         let yd = yearDays[i];
 
         if (yd.weekday === 0 && i !== 0) {
           weeks.push({ hours: cWeekHours, months: cWeekMonths });
-          cWeekHours = 0;
-          cWeekMonths = new Set();
+          cWeekHours = 0; cWeekMonths = new Set();
         }
-        cWeekHours += yd.hours;
-        cWeekMonths.add(yd.month);
+        cWeekHours += yd.hours; cWeekMonths.add(yd.month);
 
         if (yd.hours > 0) {
           currentStreak++;
-          if (yd.month === currentMonthIndex) {
-            streakTouchesCurrentMonth = true;
-          }
+          if (yd.month === currentMonthIndex) streakTouchesCurrentMonth = true;
         } else {
-          if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) {
-            maxConsecutive = currentStreak;
-          }
-          currentStreak = 0;
-          streakTouchesCurrentMonth = false;
+          if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) maxConsecutive = currentStreak;
+          currentStreak = 0; streakTouchesCurrentMonth = false;
         }
       }
       
       weeks.push({ hours: cWeekHours, months: cWeekMonths });
-      
-      if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) {
-        maxConsecutive = currentStreak;
-      }
+      if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) maxConsecutive = currentStreak;
 
-      let htmlStats = '';
-      let weekDisplayCount = 1;
+      let htmlStats = ''; let weekDisplayCount = 1;
       weeks.forEach(w => {
         if (w.months.has(currentMonthIndex)) {
           const alertClass = w.hours > 44 ? 'stat-alert' : '';
@@ -769,7 +580,6 @@
       });
 
       const consecAlert = maxConsecutive > 6 ? 'stat-alert' : '';
-      
       const card = `
         <div class="employee-card">
           <div class="emp-acc-header" onclick="toggleAudit('${emp}')">
@@ -790,12 +600,9 @@
   }
 
   window.onload = function() {
-    initializeState();
     populateModalLegend(); 
-    renderCalendar();
-    calculateAudit();
+    carregarEscala(); // Substitui o initializeState clássico pela função de buscar no Sheets
   };
-
 </script>
 </body>
 </html>
