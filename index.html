@@ -210,6 +210,14 @@
   .stat-row {
     display: flex; justify-content: space-between; font-size: 0.75rem;
     margin-bottom: 4px; padding: 4px 8px; background-color: rgba(255,255,255,0.02); border-radius: 4px;
+    align-items: center;
+  }
+  
+  .stat-row-detail {
+    font-size: 0.65rem;
+    color: var(--md-sys-color-secondary);
+    margin-right: 8px;
+    opacity: 0.8;
   }
 
   .stat-alert {
@@ -519,36 +527,13 @@
     icon.classList.toggle('active');
   };
 
-  // NOVA FUNÇÃO DE AUDITORIA (CONTÍNUA)
+  // FUNÇÃO DE AUDITORIA (CONTÍNUA) ATUALIZADA
   function calculateAudit() {
     const auditContent = document.getElementById('auditContent');
     auditContent.innerHTML = '';
 
     employees.forEach(emp => {
       
-      // 1. Calcula o Máximo de Dias Seguidos olhando o ano inteiro de forma ininterrupta
-      let yearDaysHours = [];
-      for (let m = 0; m < 12; m++) {
-        let daysInMonth = getDaysInMonth(currentYear, m);
-        for (let d = 0; d < daysInMonth; d++) {
-          let shiftKey = appState[emp][currentYear][m][d];
-          yearDaysHours.push(shifts[shiftKey].hours);
-        }
-      }
-      
-      let maxConsecutive = 0;
-      let currentStreak = 0;
-      yearDaysHours.forEach(h => {
-        if (h > 0) {
-          currentStreak++;
-        } else {
-          if (currentStreak > maxConsecutive) maxConsecutive = currentStreak;
-          currentStreak = 0;
-        }
-      });
-      if (currentStreak > maxConsecutive) maxConsecutive = currentStreak;
-
-      // 2. Calcula as Semanas com base na grade visual do calendário atual (Transborda meses)
       let htmlStats = '';
       
       // Descobre o primeiro dia do calendário visual (Pode ser do mês anterior)
@@ -568,6 +553,7 @@
       // Avança semana a semana
       while (wDate <= calendarEnd) {
         let weekHours = 0;
+        let daysWorkedInWeek = 0; // Novo contador de dias trabalhados na semana
         
         // Soma os 7 dias exatos daquela linha do calendário
         for (let i = 0; i < 7; i++) {
@@ -579,18 +565,32 @@
           if (appState[emp] && appState[emp][y] && appState[emp][y][m] && appState[emp][y][m][d]) {
              shiftKey = appState[emp][y][m][d];
           }
+          
           weekHours += shifts[shiftKey].hours;
+          
+          // Conta se a pessoa trabalhou neste dia (horas > 0)
+          if (shifts[shiftKey].hours > 0) {
+              daysWorkedInWeek++;
+          }
           
           // Avança o ponteiro de data em 1 dia
           wDate.setDate(wDate.getDate() + 1); 
         }
         
-        const alertClass = weekHours > 44 ? 'stat-alert' : '';
-        htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekIndex}:</span> <span>${weekHours}h</span></div>`;
+        // ALERTA DE DIAS TRABALHADOS: Destaca em vermelho se trabalhar mais de 5 dias na semana visual
+        const alertClass = daysWorkedInWeek > 5 ? 'stat-alert' : '';
+        
+        htmlStats += `
+            <div class="stat-row ${alertClass}">
+                <span>Semana ${weekIndex}:</span> 
+                <div>
+                    <span class="stat-row-detail">(${daysWorkedInWeek} dias)</span>
+                    <span>${weekHours}h</span>
+                </div>
+            </div>`;
         weekIndex++;
       }
 
-      const consecAlert = maxConsecutive > 6 ? 'stat-alert' : '';
       const card = `
         <div class="employee-card">
           <div class="emp-acc-header" onclick="toggleAudit('${emp}')">
@@ -598,10 +598,6 @@
             <span class="acc-icon" id="audit-icon-${emp}">▼</span>
           </div>
           <div class="emp-acc-body" id="audit-body-${emp}">
-            <div class="stat-row ${consecAlert}" style="margin-bottom: 12px; border-bottom: 1px solid var(--md-sys-color-outline);">
-              <span>Máx Dias Seguidos (Ano):</span> 
-              <span>${maxConsecutive} dias</span>
-            </div>
             ${htmlStats}
           </div>
         </div>
