@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escala NOC</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --md-sys-color-background: #1C1B1F;
+    --md-sys-color-on-background: #E6E1E5;
+    --md-sys-color-surface: #2B2930;
+    --md-sys-color-primary: #D0BCFF;
+    --md-sys-color-outline: #49454F;
+    --md-sys-color-secondary: #CCC2DC;
+    --md-sys-color-error: #F2B8B5;
+    --md-sys-color-success: #C4EED0;
+    --md-sys-color-surface-variant: #49454F;
+    
+    /* Variável para a largura da auditoria */
+    --audit-panel-width: 250px;
+  }
+
+  body {
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: 'Roboto Mono', monospace;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    scrollbar-width: auto;
+    scrollbar-color: var(--md-sys-color-surface-variant) var(--md-sys-color-surface);
+  }
+
+  ::-webkit-scrollbar { width: 12px; }
+  ::-webkit-scrollbar-track { background: var(--md-sys-color-surface); }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--md-sys-color-surface-variant);
+    border-radius: 6px;
+    border: 3px solid var(--md-sys-color-surface);
+  }
+  ::-webkit-scrollbar-thumb:hover { background-color: var(--md-sys-color-outline); }
+
+  /* CABEÇALHO */
+  header {
+    background-color: var(--md-sys-color-surface);
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    z-index: 10;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  /* Ajuste no agrupamento direito do cabeçalho */
+  .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+  }
+  
+  /* Botão Menu Hambúrguer movido para a direita */
+  .menu-btn {
+    background: none;
+    border: none;
+    color: var(--md-sys-color-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .menu-btn:hover {
+    background-color: rgba(208, 188, 255, 0.1);
+  }
+
+  h2 { margin: 0; color: var(--md-sys-color-primary); font-size: 1.2rem; text-transform: uppercase; white-space: nowrap;}
+
+  .selectors-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .custom-selector, .btn-legend {
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-primary);
+    border: 1px solid var(--md-sys-color-outline);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .custom-selector option {
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-background);
+  }
+
+  .custom-selector:hover, .btn-legend:hover {
+    background-color: rgba(208, 188, 255, 0.1);
+  }
+
+  /* MODAL DE LEGENDA */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal-content {
+    background-color: var(--md-sys-color-surface);
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid var(--md-sys-color-outline);
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+    padding-bottom: 8px;
+  }
+
+  .modal-header h3 { margin: 0; color: var(--md-sys-color-primary); }
+  
+  .close-modal {
+    background: none; border: none;
+    color: var(--md-sys-color-on-background);
+    font-size: 1.5rem; cursor: pointer;
+  }
+
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .legend-item {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--md-sys-color-outline);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend-item small {
+      display: block;
+      font-size: 0.65rem;
+      opacity: 0.7;
+      margin-top: 2px;
+  }
+
+  .main-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* CALENDÁRIO */
+  .calendar-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 24px 24px 24px;
+    overflow-y: auto; 
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: max-content; 
+    grid-auto-rows: minmax(130px, auto);  
+    gap: 6px;
+    background-color: var(--md-sys-color-surface);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--md-sys-color-outline);
+    box-sizing: border-box;
+  }
+
+  .day-header {
+    color: var(--md-sys-color-primary);
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+    font-size: 0.85rem;
+  }
+
+  .day-cell {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    justify-content: flex-start;
+  }
+
+  .empty-cell { background-color: transparent; border: none; }
+  .weekend { background-color: rgba(255, 255, 255, 0.04); }
+
+  .date-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+  }
+
+  .date-number {
+    font-weight: 700;
+    font-size: 0.95rem; 
+    color: var(--md-sys-color-on-background);
+    margin: 0;
+  }
+
+  .holiday-name {
+    font-size: 0.55rem;
+    color: var(--md-sys-color-error);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: left;
+    max-width: 65%;
+  }
+
+  .holiday-cell {
+    background-color: rgba(242, 184, 181, 0.08);
+    border: 1px solid rgba(242, 184, 181, 0.3);
+  }
+
+  .shift-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .emp-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.7rem; 
+    font-weight: 500;
+    color: var(--md-sys-color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .shift-select {
+    min-width: 80px; 
+    max-width: 95px;
+    flex-shrink: 0; 
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.65rem; 
+    font-weight: 500;
+    padding: 2px 4px;
+    border-radius: 4px;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    text-align: left; 
+  }
+
+  .shift-select option { background-color: var(--md-sys-color-surface); color: var(--md-sys-color-on-background); font-size: 0.8rem;}
+
+  /* CORES DOS TURNOS */
+  .s-adm { background-color: rgba(255, 105, 97, 0.15); color: #FF6961; border: 1px solid rgba(255, 105, 97, 0.4); } 
+  .s-h1 { background-color: rgba(135, 206, 235, 0.15); color: #87CEEB; border: 1px solid rgba(135, 206, 235, 0.4); } 
+  .s-h2 { background-color: rgba(70, 130, 180, 0.15); color: #82b1ff; border: 1px solid rgba(70, 130, 180, 0.4); }
+  .s-plantao { background-color: rgba(208, 188, 255, 0.2); color: #D0BCFF; border: 1px solid rgba(208, 188, 255, 0.4); } 
+  .s-folga { background-color: rgba(168, 230, 207, 0.15); color: #A8E6CF; border: 1px solid rgba(168, 230, 207, 0.4); } 
+  .s-ferias { background-color: rgba(255, 204, 153, 0.15); color: #FFCC99; border: 1px solid rgba(255, 204, 153, 0.4); } 
+  .s-lic-medica { background-color: rgba(255, 255, 255, 0.1); color: #F5F5F5; border: 1px solid rgba(255, 255, 255, 0.3); } 
+  .s-lic-mat { background-color: rgba(244, 143, 177, 0.15); color: #F48FB1; border: 1px solid rgba(244, 143, 177, 0.4); } 
+  .s-lic-cas { background-color: rgba(218, 165, 32, 0.15); color: #DAA520; border: 1px solid rgba(218, 165, 32, 0.4); } 
+
+  /* Área de Auditoria (Recolhível) */
+  .audit-area {
+    width: var(--audit-panel-width);
+    min-width: var(--audit-panel-width);
+    background-color: var(--md-sys-color-surface);
+    border-left: 1px solid var(--md-sys-color-outline);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: margin-right 0.3s ease-in-out; 
+  }
+
+  .audit-area.collapsed {
+    margin-right: calc(var(--audit-panel-width) * -1);
+  }
+
+  .audit-header {
+    padding: 16px;
+    background-color: var(--md-sys-color-surface); 
+    border-bottom: 1px solid var(--md-sys-color-outline);
+    position: sticky;
+    top: 0;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    z-index: 5; 
+  }
+
+  .employee-card {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+  }
+
+  .emp-acc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-background);
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: 8px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  .emp-acc-header:hover { background-color: rgba(255,255,255,0.05); }
+  .emp-acc-body { display: none; } 
+  .emp-acc-body.active { display: block; } 
+  .acc-icon { font-size: 0.8rem; color: var(--md-sys-color-secondary); transition: transform 0.3s;}
+  .emp-acc-body.active + .acc-icon, .acc-icon.active { transform: rotate(180deg); }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+    padding: 4px 8px;
+    background-color: rgba(255,255,255,0.02);
+    border-radius: 4px;
+  }
+
+  .stat-alert {
+    background-color: rgba(242, 184, 181, 0.15) !important;
+    color: var(--md-sys-color-error);
+    border: 1px solid var(--md-sys-color-error);
+    font-weight: 700;
+  }
+  
+  @media (max-width: 1200px) {
+    header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .header-left { width: 100%; justify-content: flex-start; }
+    .header-right { width: 100%; justify-content: flex-end; }
+    .shift-select { min-width: 70px; font-size: 0.6rem;} 
+  }
+
+  @media (max-width: 900px) {
+    .main-container { flex-direction: column; overflow-y: auto; }
+    .left-panel { overflow-y: visible; }
+    .calendar-area { overflow-y: visible; padding: 12px; }
+    
+    .menu-btn { display: none; } 
+
+    .audit-area { 
+        width: 100%; 
+        min-width: 100%;
+        margin-right: 0 !important; 
+        border-left: none; 
+        border-top: 1px solid var(--md-sys-color-outline); 
+        overflow-y: visible; 
+    }
+    
+    .calendar-grid { grid-template-columns: 1fr; gap: 12px; padding: 0; background: transparent; border: none;}
+    .day-header { display: none; }
+    .empty-cell { display: none; }
+    .day-cell { padding: 16px; border: 1px solid var(--md-sys-color-outline); background-color: var(--md-sys-color-surface); }
+    .date-number::before { content: "Dia "; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h2>Escala NOC</h2>
+    <div class="selectors-group">
+      <select id="yearSelector" class="custom-selector" onchange="changeDate()">
+        <option value="2026" selected>2026</option>
+        <option value="2027">2027</option>
+        <option value="2028">2028</option>
+      </select>
+      
+      <select id="monthSelector" class="custom-selector" onchange="changeDate()">
+        <option value="0" selected>Janeiro</option>
+        <option value="1">Fevereiro</option>
+        <option value="2">Março</option>
+        <option value="3">Abril</option>
+        <option value="4">Maio</option>
+        <option value="5">Junho</option>
+        <option value="6">Julho</option>
+        <option value="7">Agosto</option>
+        <option value="8">Setembro</option>
+        <option value="9">Outubro</option>
+        <option value="10">Novembro</option>
+        <option value="11">Dezembro</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="header-right">
+    <button class="btn-legend" onclick="toggleModal(true)">ℹ️ Legendas</button>
+    <button class="menu-btn" onclick="toggleAuditPanel()" title="Recolher/Expandir Auditoria">☰</button>
+  </div>
+</header>
+
+<div class="modal-overlay" id="legendModal" onclick="handleModalClick(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>ℹ️ Legenda Oficial de Turnos</h3>
+      <button class="close-modal" onclick="toggleModal(false)">×</button>
+    </div>
+    <div class="legend-grid" id="modalLegendGrid">
+      </div>
+  </div>
+</div>
+
+<div class="main-container">
+  <div class="left-panel">
+    <div class="calendar-area" id="calendarArea">
+      </div>
+  </div>
+
+  <div class="audit-area" id="auditPanel">
+    <div class="audit-header">📊 Análise de Tempo</div>
+    <div id="auditContent">
+      </div>
+  </div>
+</div>
+
+<script>
+  const employees = ['Gabi', 'Helio', 'João', 'Sabrina', 'Stael', 'Sunamita'];
+  
+  const shifts = {
+    'adm':      { emoji: '💼', label: 'ADM', detail: '08:00 - 18:00', hours: 9, class: 's-adm' },
+    'h1_9':     { emoji: '🟦', label: 'H1', detail: '08:00 - 18:00', hours: 9, class: 's-h1' },
+    'h1_4':     { emoji: '🟦', label: 'H1', detail: '08:00 - 12:00', hours: 4, class: 's-h1' },
+    'h2_8':     { emoji: '💠', label: 'H2', detail: '09:00 - 18:00', hours: 8, class: 's-h2' },
+    'h2_4':     { emoji: '💠', label: 'H2', detail: '09:00 - 13:00', hours: 4, class: 's-h2' },
+    
+    'plantao':  { emoji: '🚨', label: 'Plantão', detail: '09:00 - 18:00', hours: 8, class: 's-plantao' },
+    
+    'folga':    { emoji: '🌴', label: 'Folga', detail: '0h', hours: 0, class: 's-folga' },
+    'folga_m4': { emoji: '🌴', label: 'Folga M.', detail: 'Banco', hours: -4, class: 's-folga' },
+    'folga_m5': { emoji: '🌴', label: 'Folga M.', detail: 'Banco', hours: -5, class: 's-folga' },
+    'folga_p':  { emoji: '🏆', label: 'Folga P.', detail: '0h', hours: 0, class: 's-folga' },
+    'ferias':   { emoji: '🏖️', label: 'Férias', detail: '0h', hours: 0, class: 's-ferias' },
+    
+    'lic_med':  { emoji: '🩺', label: 'Licença M.', detail: '0h', hours: 0, class: 's-lic-medica' },
+    'lic_mat':  { emoji: '🤰', label: 'Licença M.', detail: '0h', hours: 0, class: 's-lic-mat' },
+    'lic_cas':  { emoji: '💍', label: 'Licença C.', detail: '0h', hours: 0, class: 's-lic-cas' }
+  };
+
+  const yearsAvailable = [2026, 2027, 2028];
+  
+  let appState = {};
+  let currentMonthIndex = 0; 
+  let currentYear = 2026;
+
+  window.toggleAuditPanel = function() {
+    const panel = document.getElementById('auditPanel');
+    panel.classList.toggle('collapsed');
+  };
+
+  function getHolidaysForYear(year) {
+    const holidays = {
+      '01-01': 'Confrat. Universal',
+      '04-21': 'Tiradentes',
+      '04-23': 'São Jorge', 
+      '05-01': 'Dia do Trabalho',
+      '09-07': 'Independência',
+      '10-12': 'Nossa Sra. Aparecida',
+      '11-02': 'Finados',
+      '11-15': 'Proc. da República',
+      '11-20': 'Consciência Negra', 
+      '12-25': 'Natal'
+    };
+
+    let a = year % 19;
+    let b = Math.floor(year / 100);
+    let c = year % 100;
+    let d = Math.floor(b / 4);
+    let e = b % 4;
+    let f = Math.floor((b + 8) / 25);
+    let g = Math.floor((b - f + 1) / 3);
+    let h = (19 * a + b - d - g + 15) % 30;
+    let i = Math.floor(c / 4);
+    let k = c % 4;
+    let l = (32 + 2 * e + 2 * i - h - k) % 7;
+    let m = Math.floor((a + 11 * h + 22 * l) / 451);
+    let month = Math.floor((h + l - 7 * m + 114) / 31);
+    let p_day = ((h + l - 7 * m + 114) % 31) + 1;
+
+    let easter = new Date(year, month - 1, p_day);
+
+    let goodFriday = new Date(easter);
+    goodFriday.setDate(easter.getDate() - 2);
+    
+    let carnival = new Date(easter);
+    carnival.setDate(easter.getDate() - 47);
+
+    let corpus = new Date(easter);
+    corpus.setDate(easter.getDate() + 60);
+
+    const formatDt = (dt) => String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+
+    holidays[formatDt(carnival)] = 'Carnaval';
+    holidays[formatDt(goodFriday)] = 'Paixão de Cristo';
+    holidays[formatDt(corpus)] = 'Corpus Christi';
+
+    return holidays;
+  }
+
+  window.toggleModal = function(show) {
+    document.getElementById('legendModal').classList.toggle('active', show);
+  };
+
+  window.handleModalClick = function(event) {
+    if (event.target === document.getElementById('legendModal')) {
+      toggleModal(false);
+    }
+  };
+
+  function populateModalLegend() {
+    const grid = document.getElementById('modalLegendGrid');
+    grid.innerHTML = '';
+    for (const [key, shift] of Object.entries(shifts)) {
+      grid.innerHTML += `
+        <div class="legend-item ${shift.class}">
+          <div style="font-size: 1.2rem;">${shift.emoji}</div>
+          <div style="flex: 1;">
+              <strong>${shift.label}</strong>
+              <small>${shift.detail}</small>
+          </div>
+          <div style="color: var(--md-sys-color-on-background); font-weight: bold;">
+              ${shift.hours}h
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  function getDaysInMonth(year, monthIndex) { return new Date(year, monthIndex + 1, 0).getDate(); }
+  function getStartDay(year, monthIndex) { return new Date(year, monthIndex, 1).getDay(); }
+
+  function initializeState() {
+    employees.forEach(emp => {
+      appState[emp] = {}; 
+      yearsAvailable.forEach(year => {
+        appState[emp][year] = {};
+        for(let m = 0; m < 12; m++) {
+          appState[emp][year][m] = []; 
+          const daysInMonth = getDaysInMonth(year, m);
+          const startDay = getStartDay(year, m);
+          
+          for(let d = 0; d < daysInMonth; d++) {
+            const currentWeekDay = (startDay + d) % 7;
+            let defaultShift = 'h2_8'; 
+            if (currentWeekDay === 0) defaultShift = 'folga'; 
+            if (currentWeekDay === 6) defaultShift = 'h1_4'; 
+            
+            appState[emp][year][m].push(defaultShift);
+          }
+        }
+      });
+    });
+  }
+
+  function createSelectOptions(selectedKey) {
+    let html = '';
+    for (const [key, shift] of Object.entries(shifts)) {
+      const isSelected = key === selectedKey ? 'selected' : '';
+      html += `<option value="${key}" ${isSelected}>${shift.emoji}${shift.label}</option>`;
+    }
+    return html;
+  }
+
+  window.changeDate = function() {
+    currentMonthIndex = parseInt(document.getElementById('monthSelector').value);
+    currentYear = parseInt(document.getElementById('yearSelector').value);
+    renderCalendar();
+    calculateAudit();
+  };
+
+  function renderCalendar() {
+    const daysInMonth = getDaysInMonth(currentYear, currentMonthIndex);
+    const startDay = getStartDay(currentYear, currentMonthIndex);
+    const holidays = getHolidaysForYear(currentYear); 
+    
+    const calendarArea = document.getElementById('calendarArea');
+    calendarArea.innerHTML = ''; 
+    
+    const grid = document.createElement('div');
+    grid.className = 'calendar-grid';
+    
+    const daysOfWeek = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+    daysOfWeek.forEach(d => {
+      grid.innerHTML += `<div class="day-header">${d}</div>`;
+    });
+
+    for (let i = 0; i < startDay; i++) {
+      grid.innerHTML += `<div class="day-cell empty-cell"></div>`;
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dayIndex = day - 1; 
+      const currentWeekDay = (startDay + dayIndex) % 7;
+      const isWeekend = currentWeekDay === 0 || currentWeekDay === 6;
+      
+      const dateKey = String(currentMonthIndex + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+      const holidayName = holidays[dateKey];
+      const isHoliday = holidayName !== undefined;
+      
+      let cellClass = `day-cell ${isWeekend ? 'weekend' : ''} ${isHoliday ? 'holiday-cell' : ''}`;
+      
+      let cellHtml = `<div class="${cellClass}">`;
+      
+      cellHtml += `
+        <div class="date-header-row">
+          <span class="holiday-name">${isHoliday ? holidayName : ''}</span>
+          <span class="date-number">${day}</span>
+        </div>
+      `;
+      
+      employees.forEach(emp => {
+        const savedShift = appState[emp][currentYear][currentMonthIndex][dayIndex];
+        
+        cellHtml += `
+          <div class="shift-row">
+            <span class="emp-name" title="${emp}">${emp}</span>
+            <select class="shift-select ${shifts[savedShift].class}" 
+                    onchange="updateShift(this, '${emp}', ${currentYear}, ${currentMonthIndex}, ${dayIndex})">
+              ${createSelectOptions(savedShift)}
+            </select>
+          </div>
+        `;
+      });
+      
+      cellHtml += `</div>`;
+      grid.innerHTML += cellHtml;
+    }
+    calendarArea.appendChild(grid);
+  }
+
+  window.updateShift = function(selectElement, emp, year, monthIdx, dayIdx) {
+    const val = selectElement.value;
+    selectElement.className = `shift-select ${shifts[val].class}`;
+    appState[emp][year][monthIdx][dayIdx] = val; 
+    calculateAudit();
+  };
+
+  window.toggleAudit = function(emp) {
+    const body = document.getElementById(`audit-body-${emp}`);
+    const icon = document.getElementById(`audit-icon-${emp}`);
+    body.classList.toggle('active');
+    icon.classList.toggle('active');
+  };
+
+  function calculateAudit() {
+    const auditContent = document.getElementById('auditContent');
+    auditContent.innerHTML = '';
+
+    employees.forEach(emp => {
+      let yearDays = [];
+      for (let m = 0; m < 12; m++) {
+        let daysInMonth = getDaysInMonth(currentYear, m);
+        let startDay = getStartDay(currentYear, m);
+        for (let d = 0; d < daysInMonth; d++) {
+          let shiftKey = appState[emp][currentYear][m][d];
+          let hours = shifts[shiftKey].hours;
+          let weekday = (startDay + d) % 7;
+          yearDays.push({ month: m, day: d, hours: hours, weekday: weekday });
+        }
+      }
+
+      let weeks = [];
+      let cWeekHours = 0;
+      let cWeekMonths = new Set();
+
+      let maxConsecutive = 0;
+      let currentStreak = 0;
+      let streakTouchesCurrentMonth = false;
+
+      for (let i = 0; i < yearDays.length; i++) {
+        let yd = yearDays[i];
+
+        if (yd.weekday === 0 && i !== 0) {
+          weeks.push({ hours: cWeekHours, months: cWeekMonths });
+          cWeekHours = 0;
+          cWeekMonths = new Set();
+        }
+        cWeekHours += yd.hours;
+        cWeekMonths.add(yd.month);
+
+        if (yd.hours > 0) {
+          currentStreak++;
+          if (yd.month === currentMonthIndex) {
+            streakTouchesCurrentMonth = true;
+          }
+        } else {
+          if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) {
+            maxConsecutive = currentStreak;
+          }
+          currentStreak = 0;
+          streakTouchesCurrentMonth = false;
+        }
+      }
+      
+      weeks.push({ hours: cWeekHours, months: cWeekMonths });
+      
+      if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) {
+        maxConsecutive = currentStreak;
+      }
+
+      let htmlStats = '';
+      let weekDisplayCount = 1;
+      weeks.forEach(w => {
+        if (w.months.has(currentMonthIndex)) {
+          const alertClass = w.hours > 44 ? 'stat-alert' : '';
+          htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekDisplayCount}:</span> <span>${w.hours}h</span></div>`;
+          weekDisplayCount++;
+        }
+      });
+
+      const consecAlert = maxConsecutive > 6 ? 'stat-alert' : '';
+      
+      const card = `
+        <div class="employee-card">
+          <div class="emp-acc-header" onclick="toggleAudit('${emp}')">
+            <span>🧑‍💻 ${emp}</span>
+            <span class="acc-icon" id="audit-icon-${emp}">▼</span>
+          </div>
+          <div class="emp-acc-body" id="audit-body-${emp}">
+            <div class="stat-row ${consecAlert}" style="margin-bottom: 12px; border-bottom: 1px solid var(--md-sys-color-outline);">
+              <span>Máx Dias Seguidos:</span> 
+              <span>${maxConsecutive} dias</span>
+            </div>
+            ${htmlStats}
+          </div>
+        </div>
+      `;
+      auditContent.innerHTML += card;
+    });
+  }
+
+  window.onload = function() {
+    initializeState();
+    populateModalLegend(); 
+    renderCalendar();
+    calculateAudit();
+  };
+
+</script>
+</body>
+</html>
