@@ -294,10 +294,9 @@
 </div>
 
 <script>
-  // COLOQUE O LINK DO SEU GOOGLE APPS SCRIPT AQUI 👇
+  // Link oficial e corrigido da sua API
   const apiURL = "https://script.google.com/macros/s/AKfycbwpLMiEKfjDyDg8ZTBxsgq5gNrd1dQCVks6wO676hNezWYANRdbF5y10DK7gYGDESB8VQ/exec"; 
   
-  // Agora a lista de colaboradores começa vazia e será preenchida pela planilha
   let employees = []; 
   
   const shifts = {
@@ -375,16 +374,12 @@
   function getDaysInMonth(year, monthIndex) { return new Date(year, monthIndex + 1, 0).getDate(); }
   function getStartDay(year, monthIndex) { return new Date(year, monthIndex, 1).getDay(); }
 
-  // Função central para conectar na planilha
+  // Função central limpa
   async function carregarEscala() {
     const calendarArea = document.getElementById('calendarArea');
     calendarArea.innerHTML = '<div style="text-align: center; color: var(--md-sys-color-primary); margin-top: 50px; font-size: 1.2rem;">⏳ Conectando à Planilha de Escala...</div>';
 
     try {
-      if (apiURL === "https://script.google.com/macros/s/AKfycbwpLMiEKfjDyDg8ZTBxsgq5gNrd1dQCVks6wO676hNezWYANRdbF5y10DK7gYGDESB8VQ/exec") {
-          throw new Error("Link da API não configurado. Por favor, cole o URL gerado no Apps Script.");
-      }
-
       const response = await fetch(apiURL);
       const result = await response.json();
       
@@ -395,14 +390,12 @@
       currentYear = apiYear;
       document.getElementById('yearSelector').value = apiYear;
 
-      // Cria a lista de funcionários dinamicamente a partir do mês 0 (Janeiro)
       const nameSet = new Set();
       if (dataPlanilha[apiYear] && dataPlanilha[apiYear][0]) {
          Object.keys(dataPlanilha[apiYear][0]).forEach(name => nameSet.add(name));
       }
-      employees = Array.from(nameSet).sort(); // Ordena alfabeticamente!
+      employees = Array.from(nameSet).sort(); 
 
-      // Inicializa a estrutura vazia do sistema
       appState = {};
       employees.forEach(emp => {
         appState[emp] = {};
@@ -412,7 +405,6 @@
         });
       });
 
-      // Aplica a "Tradução" da planilha para o sistema visual
       for(let m=0; m<12; m++) {
           const daysInMonth = getDaysInMonth(apiYear, m);
           const startDay = getStartDay(apiYear, m);
@@ -421,12 +413,11 @@
               const monthData = dataPlanilha[apiYear][m][emp];
               for(let d=0; d<daysInMonth; d++) {
                   const rawShift = monthData && monthData[d] ? monthData[d] : 'FO'; 
-                  const dayOfWeek = (startDay + d) % 7; // 0=Dom, 1=Seg... 6=Sab
+                  const dayOfWeek = (startDay + d) % 7; 
                   
-                  let translated = 'folga'; // Padrão seguro
+                  let translated = 'folga'; 
                   const code = String(rawShift).toUpperCase().trim();
                   
-                  // REGRAS DE TRADUÇÃO EXATAS
                   if (code === 'H1') translated = (dayOfWeek >= 1 && dayOfWeek <= 5) ? 'h1_9' : 'h1_4';
                   else if (code === 'H2') translated = (dayOfWeek >= 1 && dayOfWeek <= 5) ? 'h2_8' : 'h2_4';
                   else if (code === 'ADM') translated = 'adm';
@@ -464,7 +455,6 @@
 
   window.changeDate = function() {
     currentMonthIndex = parseInt(document.getElementById('monthSelector').value);
-    // currentYear = parseInt(document.getElementById('yearSelector').value); // Desabilitado temporariamente, API fixa no ano da planilha ativa
     renderCalendar();
     calculateAudit();
   };
@@ -601,7 +591,7 @@
 
   window.onload = function() {
     populateModalLegend(); 
-    carregarEscala(); // Substitui o initializeState clássico pela função de buscar no Sheets
+    carregarEscala(); 
   };
 </script>
 </body>
