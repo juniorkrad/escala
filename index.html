@@ -553,7 +553,7 @@
       // Avança semana a semana
       while (wDate <= calendarEnd) {
         let weekHours = 0;
-        let daysWorkedInWeek = 0; // Novo contador de dias trabalhados na semana
+        let daysWorkedInWeek = 0; 
         
         // Soma os 7 dias exatos daquela linha do calendário
         for (let i = 0; i < 7; i++) {
@@ -561,7 +561,7 @@
           let m = wDate.getMonth();
           let d = wDate.getDate() - 1; 
           
-          let shiftKey = 'folga'; // Padrão caso não exista dado (ex: anos anteriores não carregados)
+          let shiftKey = 'folga'; // Padrão caso não exista dado
           if (appState[emp] && appState[emp][y] && appState[emp][y][m] && appState[emp][y][m][d]) {
              shiftKey = appState[emp][y][m][d];
           }
@@ -577,8 +577,8 @@
           wDate.setDate(wDate.getDate() + 1); 
         }
         
-        // ALERTA DE DIAS TRABALHADOS: Destaca em vermelho se trabalhar mais de 5 dias na semana visual
-        const alertClass = daysWorkedInWeek > 5 ? 'stat-alert' : '';
+        // ALERTA DE REGRAS ATUAIS (CLT): Destaca em vermelho se trabalhar mais de 6 dias ou ultrapassar 44 horas na semana
+        const alertClass = (daysWorkedInWeek > 6 || weekHours > 44) ? 'stat-alert' : '';
         
         htmlStats += `
             <div class="stat-row ${alertClass}">
