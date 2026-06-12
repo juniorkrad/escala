@@ -294,7 +294,7 @@
 </div>
 
 <script>
-  // Link oficial e corrigido da sua API
+  // Link oficial da sua API
   const apiURL = "https://script.google.com/macros/s/AKfycbwpLMiEKfjDyDg8ZTBxsgq5gNrd1dQCVks6wO676hNezWYANRdbF5y10DK7gYGDESB8VQ/exec"; 
   
   let employees = []; 
@@ -519,55 +519,76 @@
     icon.classList.toggle('active');
   };
 
+  // NOVA FUNÇÃO DE AUDITORIA (CONTÍNUA)
   function calculateAudit() {
     const auditContent = document.getElementById('auditContent');
     auditContent.innerHTML = '';
 
     employees.forEach(emp => {
-      let yearDays = [];
+      
+      // 1. Calcula o Máximo de Dias Seguidos olhando o ano inteiro de forma ininterrupta
+      let yearDaysHours = [];
       for (let m = 0; m < 12; m++) {
         let daysInMonth = getDaysInMonth(currentYear, m);
-        let startDay = getStartDay(currentYear, m);
         for (let d = 0; d < daysInMonth; d++) {
           let shiftKey = appState[emp][currentYear][m][d];
-          let hours = shifts[shiftKey].hours;
-          let weekday = (startDay + d) % 7;
-          yearDays.push({ month: m, day: d, hours: hours, weekday: weekday });
-        }
-      }
-
-      let weeks = []; let cWeekHours = 0; let cWeekMonths = new Set();
-      let maxConsecutive = 0; let currentStreak = 0; let streakTouchesCurrentMonth = false;
-
-      for (let i = 0; i < yearDays.length; i++) {
-        let yd = yearDays[i];
-
-        if (yd.weekday === 0 && i !== 0) {
-          weeks.push({ hours: cWeekHours, months: cWeekMonths });
-          cWeekHours = 0; cWeekMonths = new Set();
-        }
-        cWeekHours += yd.hours; cWeekMonths.add(yd.month);
-
-        if (yd.hours > 0) {
-          currentStreak++;
-          if (yd.month === currentMonthIndex) streakTouchesCurrentMonth = true;
-        } else {
-          if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) maxConsecutive = currentStreak;
-          currentStreak = 0; streakTouchesCurrentMonth = false;
+          yearDaysHours.push(shifts[shiftKey].hours);
         }
       }
       
-      weeks.push({ hours: cWeekHours, months: cWeekMonths });
-      if (streakTouchesCurrentMonth && currentStreak > maxConsecutive) maxConsecutive = currentStreak;
-
-      let htmlStats = ''; let weekDisplayCount = 1;
-      weeks.forEach(w => {
-        if (w.months.has(currentMonthIndex)) {
-          const alertClass = w.hours > 44 ? 'stat-alert' : '';
-          htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekDisplayCount}:</span> <span>${w.hours}h</span></div>`;
-          weekDisplayCount++;
+      let maxConsecutive = 0;
+      let currentStreak = 0;
+      yearDaysHours.forEach(h => {
+        if (h > 0) {
+          currentStreak++;
+        } else {
+          if (currentStreak > maxConsecutive) maxConsecutive = currentStreak;
+          currentStreak = 0;
         }
       });
+      if (currentStreak > maxConsecutive) maxConsecutive = currentStreak;
+
+      // 2. Calcula as Semanas com base na grade visual do calendário atual (Transborda meses)
+      let htmlStats = '';
+      
+      // Descobre o primeiro dia do calendário visual (Pode ser do mês anterior)
+      let firstDayOfMonth = new Date(currentYear, currentMonthIndex, 1, 12, 0, 0);
+      let startOffset = firstDayOfMonth.getDay(); 
+      let calendarStart = new Date(currentYear, currentMonthIndex, 1 - startOffset, 12, 0, 0);
+      
+      // Descobre o último dia do calendário visual (Pode ser do próximo mês)
+      let daysInMonth = getDaysInMonth(currentYear, currentMonthIndex);
+      let lastDayOfMonth = new Date(currentYear, currentMonthIndex, daysInMonth, 12, 0, 0);
+      let endOffset = lastDayOfMonth.getDay();
+      let calendarEnd = new Date(currentYear, currentMonthIndex, daysInMonth + (6 - endOffset), 12, 0, 0);
+      
+      let wDate = new Date(calendarStart);
+      let weekIndex = 1;
+      
+      // Avança semana a semana
+      while (wDate <= calendarEnd) {
+        let weekHours = 0;
+        
+        // Soma os 7 dias exatos daquela linha do calendário
+        for (let i = 0; i < 7; i++) {
+          let y = wDate.getFullYear();
+          let m = wDate.getMonth();
+          let d = wDate.getDate() - 1; 
+          
+          let shiftKey = 'folga'; // Padrão caso não exista dado (ex: anos anteriores não carregados)
+          if (appState[emp] && appState[emp][y] && appState[emp][y][m] && appState[emp][y][m][d]) {
+             shiftKey = appState[emp][y][m][d];
+          }
+          weekHours += shifts[shiftKey].hours;
+          
+          // Avança o ponteiro de data em 1 dia
+          wDate.setDate(wDate.getDate() + 1); 
+        }
+        
+        const alertClass = weekHours > 44 ? 'stat-alert' : '';
+        htmlStats += `<div class="stat-row ${alertClass}"><span>Semana ${weekIndex}:</span> <span>${weekHours}h</span></div>`;
+        weekIndex++;
+      }
 
       const consecAlert = maxConsecutive > 6 ? 'stat-alert' : '';
       const card = `
@@ -578,7 +599,7 @@
           </div>
           <div class="emp-acc-body" id="audit-body-${emp}">
             <div class="stat-row ${consecAlert}" style="margin-bottom: 12px; border-bottom: 1px solid var(--md-sys-color-outline);">
-              <span>Máx Dias Seguidos:</span> 
+              <span>Máx Dias Seguidos (Ano):</span> 
               <span>${maxConsecutive} dias</span>
             </div>
             ${htmlStats}
